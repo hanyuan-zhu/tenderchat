@@ -1,0 +1,348 @@
+@media (max-width: 768px) {
+
+    .tab {
+        text-align: center;
+        /* 在小屏幕上居中 */
+    }
+
+    /* .log-container { */
+    /* display: none; Hide the log-container by default */
+    /* flex: 3; */
+    /* height: 100%;  */
+    /* } */
+
+    .tab-container {
+        display: none;
+        /* Hide the log-container by default */
+        flex: 3;
+        height: 100%;
+    }
+
+    #tender-select {
+        display: none;
+        /* 在屏幕宽度小于768px时不显示输入框 */
+    }
+
+}
+
+@media screen and (min-width: 768px) {
+
+    /* 在大屏幕上的样式 */
+    .tab-container {
+        display: block;
+        /* Show the log-container when the viewport width is greater than 768px */
+        flex: 3;
+        height: 100%;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin: 8px;
+        overflow-y: auto;
+        /* Add vertical scroll when content overflows */
+        overflow-x: hidden;
+        /* Prevent horizontal scroll */
+        width: 100%;
+        /* Set width to 100% of parent */
+        text-align: center;
+        font-family: Arial, sans-serif;
+        /* Or any font-family of your choice */
+    }
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 66px);
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    flex: 7;
+    height: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 8px;
+}
+
+/* 导航栏样式 */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+
+.navbar .tab {
+    text-align: left;
+    /* 在大屏幕上居左 */
+}
+
+.navbar .username {
+    background-color: #f9fbfd;
+    color: rgb(151, 174, 196);
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    min-height: 42px;
+    max-height: 52px;
+}
+
+.chat-box {
+    flex-grow: 1;
+    overflow-y: auto;
+    /* border: 1px solid #ddd; */
+    padding: 10px;
+    margin-bottom: 10px;
+    /* position: relative; */
+}
+
+#chat-input {
+    width: calc(100% - 90px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 8px;
+    background-color: #f8f9fa;
+    flex-grow: 1;
+    min-height: 10vh;
+    /* 让输入框占用剩余的空间 */
+}
+
+#chat-input:focus {
+    outline: 2px solid #e6e47c;
+    /* Change 'orange' to your preferred color */
+}
+
+
+.chat-container button {
+    padding: 10px 20px;
+    background-color: #ffffff;
+    /* Default white background color */
+    color: #000000;
+    /* Default black text color */
+    border: 2px solid #000000;
+    /* Black border */
+    border-radius: 8px;
+    /* Rounded edges for the pill shape */
+    cursor: pointer;
+    /* Changes the cursor to a pointer when hovering over the button */
+    outline: none;
+    /* Removes the outline to keep the style clean */
+    transition: background-color 0.2s, transform 0.2s;
+    /* Smooth transition for hover effects */
+    font-size: 16px;
+    /* Adjust the font size as needed */
+    font-weight: medium;
+    text-align: center;
+    /* Center the text inside the button */
+    display: inline-block;
+    /* Allows setting padding and margins */
+    margin: 5px;
+    /* Adds some space around the button */
+    user-select: none;
+    /* Prevents the text in the button from being selectable */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    /* Adds a shadow to give the button depth */
+}
+
+.chat-container button:hover {
+    background-color: #1a1a1a;
+    /* Dark background color on hover */
+    color: #ffffff;
+    /* Light text color on hover */
+    border: 2px solid #000000;
+    /* Maintain black border on hover for consistency */
+    transform: translateY(-2px);
+    /* Gives a small lift to the button when hovered */
+}
+
+.chat-container button:active {
+    background-color: #333333;
+    /* Slightly lighter black when the button is clicked */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    /* Increases the shadow size on click */
+    transform: translateY(1px);
+    /* Resets the button position when clicked */
+}
+
+.chat-container .button-clicked {
+    background-color: #333333;
+    /* Slightly lighter black when the button is clicked */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    /* Increases the shadow size on click */
+    transform: translateY(1px);
+    /* Resets the button position when clicked */
+}
+
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px;
+    width: 97%;
+    /* 设置父元素的宽度为100% */
+    box-sizing: border-box;
+}
+
+
+/* 下拉菜单样式 */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    padding: 12px 16px;
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.background-color {
+    background-color: #f8f9fa;
+}
+
+/* 用户消息样式 */
+.user-message {
+    background-color: #EFF2F5;
+    /* 浅灰色背景 */
+    color: #333;
+    /* 文本颜色 */
+    text-align: left;
+    /* 文本左对齐 */
+    margin: 5px 0;
+    /* 上下边距 */
+    padding: 10px 15px;
+    /* 内边距 */
+    word-wrap: break-word;
+    /* 文本自动换行 */
+    border-radius: 18px;
+    /* 边角圆滑度 */
+    width: fit-content;
+    /* 宽度适应内容 */
+    max-width: 60%;
+    /* 最大宽度 */
+    margin-left: auto;
+    /* 左边距自动，对齐到右边 */
+    clear: both;
+    /* 清除浮动 */
+}
+
+/* AI消息样式 */
+.ai-message {
+    background-color: #0078D7;
+    /* 蓝色背景 */
+    color: white;
+    /* 白色文本 */
+    text-align: left;
+    /* 文本左对齐 */
+    margin: 5px 0;
+    /* 上下边距 */
+    padding: 10px 15px;
+    /* 内边距 */
+    word-wrap: break-word;
+    /* 文本自动换行 */
+    border-radius: 18px;
+    /* 边角圆滑度 */
+    width: fit-content;
+    /* 宽度适应内容 */
+    max-width: 60%;
+    /* 最大宽度 */
+    margin-right: auto;
+    /* 右边距自动，对齐到左边 */
+    clear: both;
+    /* 清除浮动 */
+}
+
+#tender-select {
+    position: absolute;
+    /* 相对于最近的相对定位祖先元素定位 */
+    top: 10px;
+    /* 从chat-box顶部的距离 */
+    right: 10px;
+    /* 从chat-box右边的距离 */
+    z-index: 10;
+    /* 确保它在chat-box之上 */
+    /* Additional styling for the input */
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    border-bottom: 2px solid #ccc;
+}
+
+.tab {
+    flex-grow: 1;
+    /* Allows the tab to grow and fill the space */
+    text-align: center;
+    /* Centers the text inside the tab */
+    position: relative;
+    /* Context for the absolute positioning of the pseudo-element */
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 15px 0;
+    margin-bottom: -2px;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.tab:hover,
+.tab.active {
+    color: #555;
+}
+
+.tab.active {
+    font-weight: bold;
+}
+
+/* The red underline for the active tab */
+.tab.active:after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    /* Underline will span the full width of the tab */
+    height: 3px;
+    background-color: #e6e47c;
+}
+
+.tab-content {
+    display: none;
+    /* Other styles for your content area */
+}
+
+.tab-content.active {
+    display: block;
+    text-align: left;
+    margin: 8px;
+}

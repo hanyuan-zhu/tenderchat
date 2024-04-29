@@ -1,204 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo App</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-    <style>
-        
-        @media (max-width: 768px) {
-            
-            .tab {
-                text-align: center;
-                /* 在小屏幕上居中 */
-            }
-            
-            .log-container {
-                display: none; /* Hide the log-container by default */
-                flex: 3;
-                height: 100%; 
-            }
-
-        }
-
-        @media screen and (min-width: 768px) {
-            /* 在大屏幕上的样式 */
-            .log-container {
-                display: block; /* Show the log-container when the viewport width is greater than 768px */
-                flex: 3;
-                height: 100%; 
-                border: 1px solid #ddd;
-                border-radius:8px;
-                margin: 8px;
-                overflow-y: auto; /* Add vertical scroll when content overflows */
-                overflow-x: hidden; /* Prevent horizontal scroll */
-                width: 100%; /* Set width to 100% of parent */
-            }
-        }
-        .container {
-                display: flex;
-                flex-direction: row;
-                height: calc(100vh - 66px); 
-            }
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            flex: 7;
-            height: 100%; 
-            border: 1px solid #ddd;
-            border-radius:8px;
-            margin: 8px;
-        }
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     
-        /* 导航栏样式 */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #eee;
-        }
-
-        .navbar .tab {
-            text-align: left;
-            /* 在大屏幕上居左 */
-        }
-
-        .navbar .username {
-            background-color: #f9fbfd;
-            color: rgb(151, 174, 196);
-            padding: 5px 10px;
-            border-radius: 4px;
-            text-decoration: none;
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #eee;
-            min-height: 42px;
-            max-height: 52px;
-        }
-
-        .chat-box {
-            flex-grow: 1;
-            overflow-y: auto;
-            /* border: 1px solid #ddd; */
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-
-        #chat-input {
-            width: calc(100% - 90px);
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin: 8px;
-            background-color: #f8f9fa;
-            flex-grow: 1;
-            /* 让输入框占用剩余的空间 */
-        }
-
-        .chat-container button {
-            padding: 10px 20px;
-            background-color: #5cb85c;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .chat-container button:hover {
-            background-color: #449d44;
-        }
-        
-
-        .input-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 8px;
-            width: 97%; /* 设置父元素的宽度为100% */
-            box-sizing: border-box;
-        }
-        #chat-input{
-            min-height: 10vh;
-        }
-
-
-        /* 下拉菜单样式 */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            padding: 12px 16px;
-            z-index: 1;
-        }
-
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
-
-        .background-color {
-            background-color: #f8f9fa;
-        }
-        /* 用户消息样式 */
-        .user-message {
-            background-color: #EFF2F5; /* 浅灰色背景 */
-            color: #333; /* 文本颜色 */
-            text-align: left; /* 文本左对齐 */
-            margin: 5px 0; /* 上下边距 */
-            padding: 10px 15px; /* 内边距 */
-            word-wrap: break-word; /* 文本自动换行 */
-            border-radius: 18px; /* 边角圆滑度 */
-            width: fit-content; /* 宽度适应内容 */
-            max-width: 60%; /* 最大宽度 */
-            margin-left: auto; /* 左边距自动，对齐到右边 */
-            clear: both; /* 清除浮动 */
-        }
-
-        /* AI消息样式 */
-        .ai-message {
-            background-color: #0078D7; /* 蓝色背景 */
-            color: white; /* 白色文本 */
-            text-align: left; /* 文本左对齐 */
-            margin: 5px 0; /* 上下边距 */
-            padding: 10px 15px; /* 内边距 */
-            word-wrap: break-word; /* 文本自动换行 */
-            border-radius: 18px; /* 边角圆滑度 */
-            width: fit-content; /* 宽度适应内容 */
-            max-width: 60%; /* 最大宽度 */
-            margin-right: auto; /* 右边距自动，对齐到左边 */
-            clear: both; /* 清除浮动 */
-        }
-
-
-    </style>
-
 </head>
-
 <body>
     <div class="background-color">
         <!-- 导航栏 -->
         <nav class="navbar">
             <div class="tab">对话：<span class="date"></span></div>
             <div class="dropdown">
-                <!-- <img src="path_to_your_image" alt="User Avatar" class="avatar">  用户头像 -->
-                <!-- <a href="#" class="username dropdown-toggle">用户名</a> 用户名和下拉菜单触发器 -->
                 <a href="#" class="username dropdown-toggle">{{ session['username'] }}</a>
                 <div class="dropdown-menu"> <!-- 下拉菜单内容 -->
                     <a href="{{ url_for('logout') }}">退出登录</a>
@@ -209,120 +24,40 @@
             <div class="chat-container">
                 <div id="chat-box" class="chat-box">
                     <!-- AI的消息和用户的消息将在这里显示 -->
+                    <!-- <input type="text" id="floating-input" placeholder="当前标签：未选择"> -->
+                    <!-- <label for="tender-select">当前关注招标：</label> -->
+                    <!-- <select id="tender-select" disabled>
+                        <option selected>当前关注:标1</option>
+                    </select> -->
                 </div>
                 <div class="input-container">
-                    <textarea id="chat-input" placeholder="请输入...(shift+enter可换行) " onkeydown="if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
-                    <button onclick="sendMessage()"style="margin:8px">发送</button>
+                    <textarea id="chat-input" placeholder="请输入...(shift+enter可换行) "
+                        onkeydown="if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
+                    <button onclick="sendMessage()" class="button">发送</button>
                 </div>
             </div>
-            <div id="log-container" class="log-container">
-                <!-- 日志信息将在这里显示 -->
-                
-                <div id="Workspace" class="tabcontent">
-                    <!-- 工作区的内容将在这里显示 -->
+            <div id="tab-container" class="tab-container">
+                <div class="tabs">
+                    <button class="tab" onclick="openTab(event, 'Workspace')">机器人日志</button>
+                    <button class="tab" onclick="openTab(event, 'Detail')">标讯详情</button>
+                    <button class="tab" onclick="openTab(event, 'Web')">网页工具</button>
                 </div>
-            
-                
-            </div> 
-            </div> 
+
+                <div id="log-container" class="log-container">
+                    <div id="Workspace" class="tab-content">
+                        <!-- Workspace content will show here -->
+                    </div>
+                    <div id="Detail" class="tab-content">
+                        <!-- Detail content will show here -->
+                    </div>
+                    <div id="Web" class="tab-content">
+                        <!-- Web content will show here -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script> -->
-    
-    <script>
-
-        // 创建一个新的 Date 当日日期对象
-        var now = new Date();
-        // 将 Date 对象转换为北京时间的日期字符串
-        var dateString = now.toLocaleDateString("zh-CN", {timeZone: "Asia/Shanghai"});
-        // 选择 .tab 元素
-        var tabElement = document.querySelector(".date");
-        // 将 .tab 元素的内容设置为日期字符串
-        tabElement.textContent = dateString;
-
-        function sendMessage() {
-            var input = document.getElementById('chat-input').value; // 获取用户输入
-            var chatBox = document.getElementById('chat-box'); // 获取显示对话的容器
-
-            // 显示用户输入到界面
-            var userDiv = document.createElement("div");
-            userDiv.textContent = "You: " + input;
-            userDiv.className = 'user-message'; // 应用用户消息的CSS类
-            chatBox.appendChild(userDiv);
-
-            // 准备发送到服务器
-            fetch('/query', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ input: input })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // 显示AI的回答
-                    var aiDiv = document.createElement("div");
-                    aiDiv.textContent = "AI: " + data.result;  // 修改这里：使用 data.result 而不是 data.result.output
-                    aiDiv.className = 'ai-message'; // 应用AI消息的CSS类
-                    chatBox.appendChild(aiDiv);
-
-                    // 滚动到最新消息
-                    chatBox.scrollTop = chatBox.scrollHeight;
-
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    var errorDiv = document.createElement("div");
-                    errorDiv.textContent = "Error: " + error;
-                    chatBox.appendChild(errorDiv);
-                });
-
-            // 清空输入框
-            document.getElementById('chat-input').value = '';
-            return false;  // 阻止表单默认提交
-        }
-        
-        // 处理 'logs' 事件：
-        // 处理 'logs' WebSocket 事件：
-        var ws = new WebSocket('ws://localhost:5001/logs');
-
-        ws.onopen = function() {
-            console.log('WebSocket connection opened');
-        };
-
-        ws.onmessage = function(event) {
-            console.log('Received message: ', event.data);
-            
-            var workspace = document.getElementById('Workspace');
-            if (workspace) {
-                workspace.innerHTML += event.data + '<br>';
-                setTimeout(function() {
-                    workspace.scrollTop = workspace.scrollHeight;
-                }, 3000);
-                console.log('Log appended to workspace.');
-            } else {
-                console.error('Workspace element not found.');
-            }
-        };
-
-        ws.onerror = function(event) {
-            console.error('WebSocket error: ', event);
-        };
-
-        ws.onclose = function() {
-            console.log('WebSocket connection closed');
-        };
-
-    </script>
-
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
-
-
-
 
 </html>
