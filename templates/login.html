@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-size: cover;
+        }
+        form {
+            background: white;
+            padding: 2em;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            min-width: 50%;
+            min-height:30%;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 1em;
+            color: #333;
+        }
+        label {
+            color: #666;
+            font-size: 14px;
+        }
+        input[type="text"] {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            width: calc(100% - 22px); /* width and padding */
+            margin-bottom: 1em;
+        }
+        input[type="submit"] {
+            background: #000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input[type="submit"]:hover {
+            background: #333;
+        }
+        @media screen and (min-width: 768px) {
+           
+            
+        }
+    </style>
+</head>
+<body>
+    <form action="/login" method="post">
+        <h2>BuildSense</h2>
+        <label for="username">用户名:</label><br>
+        <input type="text" id="username" name="username"><br>
+        <input type="submit" value="登录">
+    </form>
+</body>
+</html>
