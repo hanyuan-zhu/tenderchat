@@ -66,7 +66,7 @@ local_date_string = now.strftime('%Y-%m-%d %H:%M:%S')
 #   },
 # }
 
-# llm = QwenModel(api_key="sk-cbcc1fb859b1456885a270eecbec6369", model="qwen-turbo", temperature=0.9,tools=sql_tools)
+# llm = QwenModel(api_key="", model="qwen-turbo", temperature=0.9,tools=sql_tools)
 # def first_response(messages):
 
 #     logger.info('接收到消息')
@@ -251,7 +251,7 @@ def get_ai_response(user_input):
     messages.append({"role": "user","content": '用户的问题是：' + user_input})
     
     # model = ZhipuModel(api_key=api_key, model="glm-4", temperature=0.9,tools=sql_tools)
-    llm = QwenModel(api_key="sk-cbcc1fb859b1456885a270eecbec6369", model="qwen-max", temperature=0.2,tools=tools)
+    llm = QwenModel(api_key="", model="qwen-max", temperature=0.2,tools=tools)
     
     # 下面的循环核心是执行response = llm.call(messages)，如果出现错误，等待一段时间后再次尝试，最多尝试3次
     response = call_model(llm, messages)
