@@ -1,12 +1,13 @@
 # ai.py
 # from zhipuai import ZhipuAI
-from config import api_key
+from config import api_key_qwen
 from utils import clean_sql_query, execute_sql_query, logger
 import json
 from aiModel import ZhipuModel, QwenModel
 import time
 import logging
 # client = ZhipuAI(api_key=api_key)
+import markdown
 
 from datetime import datetime
 # 获取当前的本地时间
@@ -219,47 +220,68 @@ def get_ai_response(user_input):
 
     role_setting = '''
 
-    "整体介绍": "作为专为监理行业招标公告设计的AI助手，我通过直接访问数据库来精准响应用户的查询需求。我的核心能力在于利用唯一的工具sql_tools，针对结构化的招标公告信息执行SQL查询。",
-    "数据库概况": "我所访问的数据库汇集了最新监理招标公告的结构化数据，这些数据经由AI处理，分布在多个精心设计的表格中，每个表格承载着不同维度的公告信息。",
-    
-    "查询策略":
-    {
-        "初步探索": [
-        "首先，我将执行 'show tables;' 命令以获取所有数据表的名称列表，这有助于识别可能与用户查询相关联的表。",
-        "随后，针对几个疑似相关的表，我将逐一执行 'show create table table_name;' 查询，以深入了解各表的结构、字段及其关联情况。"
-        ],
-        "信息筛选": [
-        "基于表结构分析，我将精心挑选若干关键字段，这些字段应当与用户查询最为贴近。为避免信息过载，初期查询将限制展示条目数量，如：'SELECT column1, column2, ... FROM table_name LIMIT 3;'"
-        ],
-        "确认与构建查询": [
-        "在初步验证所选字段包含解答所需信息后，我将构建一个针对性的SQL查询，确保该查询能够精确提取解答用户问题所需的所有数据。"
-        ]
-    },
-    
-    "互动流程": [
-        "接收用户查询 -> 分析查询需求 -> 应用查询策略探索数据库 -> 确认信息适用性 -> 构建并执行SQL查询 -> 解析查询结果 -> 以专业、简洁的语言反馈用户"
-    ],
-
-    "注意事项": [
-        "在整个过程中，我将保持对用户查询意图的高度敏感，确保每一步都紧密围绕用户需求进行。如果在任何阶段发现信息不足或不明确，我将主动向用户请求更多细节，以提升查询的准确性和效率。"
+  "整体介绍": "作为专为监理行业招标公告设计的AI助手，我通过直接访问数据库精准响应用户需求，利用sql_tools执行精细SQL查询以提取招标公告信息。",
+"核心数据库表概览": {
+    "tender_index": "汇总招标公告基本信息，涵盖公告名字、发布日期等关键字段，适合快速检索公告概览。",
+    "tender_key_detail": "集中存储招标公告中的重要细节，如价格范围、工期、面积、总造价及具体要求，用于满足对招标核心条件的查询。",
+    "tender_detail": "提供招标公告其他结构化信息补充，丰富tender_key_detail未涵盖的内容。",
+    "tender_detail_html": "保存招标公告原文HTML及来源信息，便于查阅原始公告或分析网页结构。",
+    "announcement_catalog": "公告类型分类，帮助按公告种类进行筛选。",
+    "announcement_labels": "为公告提供标签，支持通过标签快速定位。",
+    "company_qualification_type": "收录国家规定的资质类型官方名称列表，用于匹配用户提供的资质简称或模糊描述，提升查询准确性。"
+}
+      "查询前强制验证流程": 
+  {
+    "绝对验证步骤": 
+    [
+      "在执行任何查询之前，AI必须首先调用 'show create table table_name;' 来获取指定表的精确字段名称和结构，无论之前是否有过查询经验。",
+      "基于获取的表结构，创建一个临时的验证字段列表，该列表仅包含与用户查询需求直接相关的、已验证的字段名。",
+      "对于每个待查询的表，先执行一个验证查询，如：'SELECT column1, column2 FROM table_name LIMIT 1;'，确保每个字段有效，且数据格式符合预期。",
+      "仅当验证查询成功，且返回了预期结构的数据时，才允许使用这些字段构建用户查询的最终SQL语句。"
     ]
+  },
 
+  "查询策略强化":
+  {
+    "零假设原则": "在构建任何查询之前，AI不得基于假设推断任何字段名。所有字段名必须直接来源于对数据库的实际探查。",
+    "先验证后查询": [
+      "对于每一个用户查询，首要步骤是使用 'show create table table_name;' 来明确每个可能涉及的表的结构和字段名称。",
+      "基于表结构信息，识别与用户查询最相关的实际字段名，避免使用未经验证的假设性字段。",
+      "通过执行 'SELECT column1, column2, ... FROM table_name LIMIT 3;' 来验证选取的字段确实包含了预期信息，并确认这些字段与用户查询需求的匹配度。"
+    ],
+    "错误处理与自我修正": [
+      "遭遇查询错误时，立即回溯并检查是否因使用了未经验证的字段名导致。绝不重复同样的错误假设。",
+      "对于报错信息，如 'Unknown column'，应视为直接指令，立即通过 'show create table' 再次确认正确字段名，避免再次尝试错误的字段。",
+      "在修正查询前，利用已知的正确字段列表重新规划查询逻辑，必要时通过LIMIT操作小规模验证修正后的查询是否有效。"
+    ],
+    "查询逻辑优化": [
+      "对于复杂查询，应先构建简单查询，逐步增加条件和字段，确保每一步都能正常执行。",
+      "在查询中尽量避免使用通配符 *，而是明确指定需要的字段，以减少数据传输量和提高查询效率。",
+      "在使用多表连接时，应明确每个表的连接条件，避免出现笛卡尔积等效率低下的情况。"
+    ]},
     
+  "互动流程": [
+    "接收用户查询 -> 分析查询需求 -> 强制执行表结构与字段验证 -> 构建验证查询 -> 验证查询成功 -> 构建并执行最终SQL查询 -> 解析查询结果 -> 以专业、简洁的语言反馈用户"
+  ]
+    ]
     '''
     
     messages = [{"role": "system","content": role_setting}]
     messages.append({"role": "user","content": '用户的问题是：' + user_input})
     
+    model_name = "qwen-plus" 
     # model = ZhipuModel(api_key=api_key, model="glm-4", temperature=0.9,tools=sql_tools)
-    llm = QwenModel(api_key="", model="qwen-max", temperature=0.2,tools=tools)
-    
+    llm = QwenModel(api_key=api_key_qwen, model=model_name, temperature=0.2,tools=tools)
+    logger.info('AI模型已初始化：%s', model_name)
+    total_usage = 0
     # 下面的循环核心是执行response = llm.call(messages)，如果出现错误，等待一段时间后再次尝试，最多尝试3次
     response = call_model(llm, messages)
     messages.append(response.message)
-    logger.info('AI模型已调用，响应已添加到消息列表，响应是：%s', response.message['content'])
+    total_usage += response.usage["total_tokens"]
+    logger.info('AI模型已调用：%s', response.message['content'])
 
     
-    max_loop_count = 3
+    max_loop_count = 10
     loop_count = 0
     while loop_count < max_loop_count and ("tool_calls" in response.message):
         tool_call = response.message["tool_calls"][0]
@@ -282,12 +304,14 @@ def get_ai_response(user_input):
             "tool_call_id":tool_call['id']
         })
         
-        logger.info('工具调用的结果已添加到消息列表，结果是：%s', function_result)
+        logger.info('工具调用的结果是：%s', function_result)
 
         
         # 下面的循环核心是执行response = llm.call(messages)，如果出现错误，等待一段时间后再次尝试，最多尝试3次
         response = call_model(llm, messages)
+        total_usage += response.usage["total_tokens"]
         messages.append(response.message)
-        logger.info('AI模型已再次调用，响应已添加到消息列表，响应是：%s', response.message['content'])
-
-    return response.message["content"]
+        logger.info('AI模型已再次调用，响应是：%s', response.message['content'])
+    logger.info('AI模型已完成，总共使用的token数：%s。模型名：%s。', total_usage, model_name)
+    html = markdown.markdown(response.message["content"])
+    return html
