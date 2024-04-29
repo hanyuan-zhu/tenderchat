@@ -36,12 +36,18 @@ function sendMessage() {
         .then(data => {
             // 显示AI的回答
             var aiDiv = document.createElement("div");
-            aiDiv.textContent = "AI: " + data.result;  // 修改这里：使用 data.result 而不是 data.result.output
             aiDiv.className = 'ai-message'; // 应用AI消息的CSS类
+            // aiDiv.textContent = "AI: " + data.result;  // 修改这里：使用 data.result 而不是 data.result.output
+            var formattedData = data.result
+                .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') // replaces markdown bold syntax with HTML bold tags
+            aiDiv.innerHTML =  "AI: "+formattedData;
+        
             chatBox.appendChild(aiDiv);
 
             // 滚动到最新消息
-            chatBox.scrollTop = chatBox.scrollHeight;
+            setTimeout(() => {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 0);
 
         })
         .catch(error => {
@@ -70,7 +76,7 @@ ws.onmessage = function (event) {
     var workspace = document.getElementById('Workspace');
     if (workspace) {
         workspace.innerHTML += event.data + '<br>';
-        setTimeout(function () {
+        setTimeout(() => {
             workspace.scrollTop = workspace.scrollHeight;
         }, 3000);
         console.log('Log appended to workspace.');
