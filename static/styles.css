@@ -271,6 +271,7 @@
     /* 右边距自动，对齐到左边 */
     clear: both;
     /* 清除浮动 */
+    line-height: 1.6;
 }
 
 #tender-select {
