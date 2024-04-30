@@ -98,7 +98,8 @@
     max-height: 52px;
 }
 
-.chat-box {
+#chat-box {
+    display: block;
     flex-grow: 1;
     overflow-y: auto;
     /* border: 1px solid #ddd; */
@@ -265,7 +266,7 @@
     /* 边角圆滑度 */
     width: fit-content;
     /* 宽度适应内容 */
-    max-width: 60%;
+    max-width: 70%;
     /* 最大宽度 */
     margin-right: auto;
     /* 右边距自动，对齐到左边 */
@@ -346,4 +347,16 @@
     display: block;
     text-align: left;
     margin: 8px;
+}
+.message-header-left {
+    font-size: 0.8em;
+    color: #888;
+    margin-bottom: 5px;
+    text-align: left;
+}
+.message-header-right {
+    font-size: 0.8em;
+    color: #888;
+    margin-bottom: 5px;
+    text-align: right;
 }

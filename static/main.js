@@ -2,6 +2,8 @@
 var now = new Date();
 // 将 Date 对象转换为北京时间的日期字符串
 var dateString = now.toLocaleDateString("zh-CN", { timeZone: "Asia/Shanghai" });
+// 获取当前时间
+var currentTime = new Date().toLocaleTimeString();
 var tabElement = document.querySelector(".date");
 tabElement.textContent = dateString;
 
@@ -13,10 +15,17 @@ function sendMessage() {
     if (!input.trim()) {
         return false;
     }
+
+    // 用户消息头部
+    var userHeaderDiv = document.createElement("div");
+    userHeaderDiv.className = 'message-header-right';
+    userHeaderDiv.textContent = `You, ${currentTime}`;
+    chatBox.appendChild(userHeaderDiv);
+
     // 显示用户输入到界面
     var userDiv = document.createElement("div");
-    userDiv.textContent = "You: " + input;
-    userDiv.className = 'user-message'; // 应用用户消息的CSS类
+    userDiv.className = 'user-message';
+    userDiv.textContent = input;
     chatBox.appendChild(userDiv);
 
     // 准备发送到服务器
@@ -34,16 +43,22 @@ function sendMessage() {
             return response.json();
         })
         .then(data => {
+             // 将换行符转换为HTML的<br>标签
+             let formattedText = data.result.replace(/\n/g, '<br>');
+             // 将文本中的**text**转换为加粗
+             formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // AI消息头部
+            var aiHeaderDiv = document.createElement("div");
+            aiHeaderDiv.className = 'message-header-left';
+            aiHeaderDiv.innerHTML = `AI, ${currentTime}`;
+            chatBox.appendChild(aiHeaderDiv);
+
             // 显示AI的回答
             var aiDiv = document.createElement("div");
-            aiDiv.className = 'ai-message'; // 应用AI消息的CSS类
-            // aiDiv.textContent = "AI: " + data.result;  // 修改这里：使用 data.result 而不是 data.result.output
-            var formattedData = data.result
-                .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') // replaces markdown bold syntax with HTML bold tags
-            aiDiv.innerHTML =  "AI: "+formattedData;
-        
+            aiDiv.className = 'ai-message';
+            aiDiv.innerHTML = formattedText;
             chatBox.appendChild(aiDiv);
-
             // 滚动到最新消息
             setTimeout(() => {
                 chatBox.scrollTop = chatBox.scrollHeight;
@@ -71,14 +86,13 @@ ws.onopen = function () {
 };
 
 ws.onmessage = function (event) {
-    console.log('Received message: ', event.data);
-
+    console.log('Received logger: ', event.data);
     var workspace = document.getElementById('Workspace');
     if (workspace) {
         workspace.innerHTML += event.data + '<br>';
         setTimeout(() => {
             workspace.scrollTop = workspace.scrollHeight;
-        }, 3000);
+        }, 0);
         console.log('Log appended to workspace.');
     } else {
         console.error('Workspace element not found.');
