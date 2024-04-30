@@ -12,6 +12,55 @@ formatter = logging.Formatter('%(message)s')
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
+
+def table_details(tables:list):
+    """
+    输入表名列表:["table1","table2"]
+    返回每张表的结构（列名、数据类型、完整性约束等）及前几行数据作为示例
+    """
+    connection = mysql.connector.connect(**database_config)
+    logger.info('已连接到标讯数据库')
+    cursor = connection.cursor()
+    
+    # 定义查询表结构和前几行数据的SQL模板
+    schema_query_template = "SHOW CREATE TABLE {};"
+    sample_data_query_template = "SELECT * FROM {} LIMIT 3;"
+    
+    table_details_list = []
+    
+    for table in tables:
+        try:
+            # 查询表结构（使用SHOW CREATE TABLE）
+            cursor.execute(schema_query_template.format(table))
+            schema_result = cursor.fetchone()  # SHOW CREATE TABLE 只返回一行数据
+            
+            # 从查询结果中提取表结构SQL语句
+            create_table_sql = schema_result[1]  # 第一列是表名，第二列是创建表的SQL语句
+            
+            # 查询表的前几行数据
+            cursor.execute(sample_data_query_template.format(table))
+            sample_data_result = cursor.fetchall()
+            
+            # 处理结果
+            # 注意：此处直接使用SHOW CREATE TABLE的结果，不再分解为列名和数据类型列表，
+            # 因为完整的创建语句已经包含了这些信息，且可能更复杂（如外键定义等）
+            table_info = {
+                "table_name": table,
+                "create_table_statement": create_table_sql,
+                "sample_data": sample_data_result
+            }
+            table_details_list.append(table_info)
+            
+        except mysql.connector.Error as err:
+            logger.error(f"查询表'{table}'时发生错误: {err}")
+            continue
+        
+    # 关闭游标和连接
+    cursor.close()
+    connection.close()
+    
+    logger.info('成功获取表详情并关闭数据库连接')
+    return table_details_list
 def execute_sql_query(sql_query:str):
     """
     执行SQL查询并返回结果
