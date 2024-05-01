@@ -1,0 +1,160 @@
+[
+    {
+        "table": "announcement_catalog",
+        "summary": "这是一个用于存储不同类型的公告分类的数据库表，如招标、资格审核、答疑、变更和澄清公告等。",
+        "columns": {
+            "id": "标识公告分类的唯一整数ID，自动递增",
+            "announcement_type": "存储各种类型的公告名称，如招标公告、资格审核公告等，最多255个字符"
+        }
+    },
+    {
+        "table": "announcement_labels",
+        "summary": "此`announcement_labels`表用于存储与`tender_index`表中的公告相关的标签信息，通过`type_id`链接到`announcement_catalog`表中的标签类别。",
+        "columns": {
+            "id": "主键，自增的整数，用于唯一标识每个公告标签记录。",
+            "tender_id": "外键，整数，引用`tender_index`表中的公告ID，表示该标签关联的公告。",
+            "type_id": "外键，整数，引用`announcement_catalog`表中的ID，表示公告的标签类型。"
+        }
+    },
+    {
+        "table": "company",
+        "summary": "这个表格是一个名为`company`的数据库表，用于存储公司的基本信息，主要包含公司的唯一标识ID和公司名称。",
+        "columns": {
+            "id": "这是表格的主键，是一个自动递增的整数，用于唯一标识每家公司。",
+            "name": "这是一个字符串字段，存储公司的全名，如'广东财贸建设工程顾问有限公司'。"
+        }
+    },
+    {
+        "table": "company_qualification_level",
+        "summary": "company_qualification_level表格用于存储公司的资质等级信息，每个等级由一个唯一的标识符和一个代表等级名称的文本字符串表示。",
+        "columns": {
+            "id": "这是表格中每个资质等级的唯一标识，是一个自增的整数。",
+            "level": "此列存储公司的资质等级名称，如'甲'、'乙'、'丙'等，是公司资质级别的文字描述。"
+        }
+    },
+    {
+        "table": "company_qualification_type",
+        "summary": "这个表格`company_qualification_type`用于存储公司的不同资质类型，其中`id`是每个资质类型的唯一标识符，`type`列记录了具体的资质类别，如房屋建筑工程、冶炼工程等。",
+        "columns": {
+            "id": "这是表格的主键，自增的大整数，用于唯一标识每个公司资质类型。",
+            "type": "这一列存储了公司的各种资质类型，例如房屋建筑工程、冶炼工程等，反映了公司的业务覆盖范围。"
+        }
+    },
+    {
+        "table": "education_level",
+        "summary": "这个\"education_level\"表格用于存储不同教育程度的分类，如中专/高中、专科、本科等。",
+        "columns": {
+            "id": "标识教育程度记录的唯一编号，是一个自增的整数",
+            "education_level": "描述个体的教育水平，如中专/高中、专科、本科、硕士研究生和博士研究生"
+        }
+    },
+    {
+        "table": "professional_title_level",
+        "summary": "这个表格`professional_title_level`用于存储不同级别的专业职称，如高级工程师、教授级高级工程师等。",
+        "columns": {
+            "id": "标识每个专业职称记录的唯一整数ID",
+            "title_level": "描述专业职称的级别，例如正高级、副高级、中级和初级"
+        }
+    },
+    {
+        "table": "registration_certificate_profession",
+        "summary": "此表格是一个`registration_certificate_profession`表，用于存储总监不同类型的工程专业证书注册信息，主要包含两个字段：一个自增的唯一标识符`id`和具体的工程专业名称`profession`。",
+        "columns": {
+            "id": "这是一个自增的主键，用于唯一标识每个工程专业的记录。",
+            "profession": "此列存储各种总监专业的名称，如房屋建筑工程、冶炼工程等，表示证书所涵盖的专业领域。"
+        }
+    },
+    {
+        "table": "tender_detail",
+        "summary": "此表格用于存储关于各类工程项目招标的详细信息，包括但不限于招标ID、时间安排、参与机构、联系方式、资质要求、项目名称和实施地点等，以便于管理和跟踪整个招标流程。",
+        "columns": {
+            "id": "记录的唯一标识符",
+            "tender_id": "关联的招标项目ID",
+            "tender_document_start_time": "招标文件开始发布时间",
+            "tender_document_end_time": "招标文件结束接收时间",
+            "question_deadline": "问题提交截止日期",
+            "answer_announcement_time": "答疑公告时间",
+            "bid_submission_deadline": "投标截止时间",
+            "bid_opening_time": "开标时间",
+            "tenderer": "招标方名称",
+            "tender_contact": "招标方联系人",
+            "contact_phone": "招标方联系电话",
+            "tender_agency": "招标代理机构",
+            "tender_agency_contact": "招标代理机构联系人",
+            "tender_agency_contact_phone": "招标代理机构联系电话",
+            "supervision_qualification_requirement": "监督机构的资质要求",
+            "business_license_requirement": "业务许可证要求",
+            "chief_supervisor_qualification_requirement": "首席监理的资格要求",
+            "consortium_bidding_requirement": "联合体投标的要求",
+            "project_name": "项目名称",
+            "investment_project_code": "投资项目代码",
+            "tender_project_name": "招标项目名称",
+            "implementation_site": "项目实施地点",
+            "funding_source": "资金来源",
+            "tender_scope_and_scale": "招标范围和规模",
+            "duration": "项目持续时间",
+            "maximum_bid_price": "最高投标限价",
+            "qualification_review_method": "资格审查方法"
+        }
+    },
+    {
+        "table": "tender_detail_html",
+        "summary": "这个表主要用于存储招标公告的详细HTML内容，每条记录包含一个招标项目的详细信息和相关元数据。表中还包括招标项目的唯一标识、编号、标题、公告发布时间、原始链接以及数据提取的最后时间等配套信息，以便对招标公告进行详细的追踪和引用。",
+        "columns": {
+            "id": "招标项目的唯一标识",
+            "tender_id": "招标项目的编号",
+            "title": "招标项目的标题",
+            "publish_time": "公告发布时间",
+            "original_link": "招标公告的原始链接",
+            "original_detail_html": "招标公告的详细HTML内容",
+            "last_extracted_time": "数据提取的最后时间"
+        }
+    },
+    {
+        "table": "tender_index",
+        "summary": "招标信息索引，记录了不同地区在工程建设领域的招标项目，包括项目标题、发布日期、省份、发布平台、信息类型、业务类型以及详细的链接，并标记了是否已获取详细信息。",
+        "columns": {
+            "id": "唯一的标识符，用于记录每个招标信息的唯一ID",
+            "title": "招标项目的标题，描述了具体的工程项目",
+            "publish_time": "招标信息的发布日期，以日期形式表示",
+            "province": "项目所在的省份，用于地理位置的分类",
+            "source_platform": "发布招标信息的公共资源交易平台名称",
+            "info_type": "信息类型，如'招标/资审公告'，表明公告的性质",
+            "business_type": "工程的业务类型，如'工程建设'，描述项目所属的行业类别",
+            "industry": "具体行业，例如'水利管理业'或'房屋建筑业'，有时可能为空",
+            "detail_link": "指向项目详细信息的外部链接，方便用户查阅",
+            "detail_info_fetched": "一个布尔值，表示是否已经抓取并存储了该项目的详细信息"
+        }
+    },
+    {
+        "table": "tender_key_detail",
+        "summary": "这个表格`tender_key_detail`用于存储招标（tender）的关键详细信息，包括投标价格、施工期限、施工面积、施工成本，以及承包商的资格类型、级别、专业、项目负责人资格等详细要求。",
+        "columns": {
+            "tender_id": "招标项目的唯一标识符",
+            "bid_price": "招标价格的具体金额,单位元",
+            "construction_duration": "工期预计持续时间（单位：天）",
+            "construction_area": "总建筑面积，单位平方米",
+            "construction_cost": "建安费用的具体金额，单位元",
+            "qualification_type": "承包商的资质类型",
+            "qualification_level": "承包商的资质等级",
+            "qualification_profession": "总监注册资格证书专业",
+            "title_level": "总监职称级别",
+            "education": "总监学历",
+            "performance_requirements": "对总监以往业绩的要求",
+            "simultaneous_projects_limit": "总监可以同时承担的项目限制",
+            "qualification_profession_addition": "总监的附加信息"
+        }
+    },
+    {
+        "table": "users",
+        "summary": "用户管理系统的一部分，存储用户的唯一标识、会话密钥、昵称、权限级别和公司关联信息。",
+        "columns": {
+            "id": "用户记录的唯一标识，自增长整数",
+            "openid": "用户的唯一标识符，字符串类型且在表中具有唯一性约束",
+            "session_key": "用户的会话密钥，可能为空，用于临时认证",
+            "nickname": "用户的昵称，可为空",
+            "permission": "用户的权限级别，用整数表示，默认为0",
+            "company_id": "用户所属公司的ID，整数，可能为空，与`company`表有关联关系"
+        }
+    }
+]
