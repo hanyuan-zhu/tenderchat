@@ -4,7 +4,6 @@ from utils import logger, sql_query,table_info
 import json
 import time
 from aiModel import QwenModel
-
 from datetime import datetime
 # 获取当前的本地时间
 now = datetime.now()

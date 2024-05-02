@@ -2,7 +2,6 @@
 import mysql.connector
 from config import api_key_qwen
 import logging
-import re
 import dashscope
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import DashScopeEmbeddings

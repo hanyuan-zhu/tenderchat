@@ -1,9 +1,6 @@
 import random
 from dashscope import Generation
 import dashscope
-
-import random
-
 class QwenModel:
     def __init__(self, api_key, model, tools=None, temperature=0.2, result_format='message'):
         """
