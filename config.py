@@ -9,3 +9,10 @@ database_config = {
     "database": "sele",
     "port": 63432
 }
+database_config_insert = {
+    "host": "gz-cdb-5scrcjb5.sql.tencentcdb.com",
+    "user": "buildsensePublic",
+    "password": "buildsense905",
+    "database": "sele",
+    "port": 63432
+}
