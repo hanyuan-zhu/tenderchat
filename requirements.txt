@@ -1,0 +1,6 @@
+mysql-connector-python
+langchain-community
+dashscope
+gevent
+gevent-websocket
+flask

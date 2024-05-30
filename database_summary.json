@@ -98,21 +98,8 @@
         }
     },
     {
-        "table": "tender_detail_html",
-        "summary": "这个表主要用于存储招标公告的详细HTML内容，每条记录包含一个招标项目的详细信息和相关元数据。表中还包括招标项目的唯一标识、编号、标题、公告发布时间、原始链接以及数据提取的最后时间等配套信息，以便对招标公告进行详细的追踪和引用。",
-        "columns": {
-            "id": "招标项目的唯一标识",
-            "tender_id": "招标项目的编号",
-            "title": "招标项目的标题",
-            "publish_time": "公告发布时间",
-            "original_link": "招标公告的原始链接",
-            "original_detail_html": "招标公告的详细HTML内容",
-            "last_extracted_time": "数据提取的最后时间"
-        }
-    },
-    {
         "table": "tender_index",
-        "summary": "招标信息索引，记录了不同地区在工程建设领域的招标项目，包括项目标题、发布日期、省份、发布平台、信息类型、业务类型以及详细的链接，并标记了是否已获取详细信息。",
+        "summary": "招标信息索引，记录了不同地区在工程建设领域的招标项目，包括项目标题、发布日期、省份、发布平台、信息类型、业务类型以及详细的链接，并标记了是否已获取详细信息。不包含资质信息",
         "columns": {
             "id": "唯一的标识符，用于记录每个招标信息的唯一ID",
             "title": "招标项目的标题，描述了具体的工程项目",
@@ -121,22 +108,22 @@
             "source_platform": "发布招标信息的公共资源交易平台名称",
             "info_type": "信息类型，如'招标/资审公告'，表明公告的性质",
             "business_type": "工程的业务类型，如'工程建设'，描述项目所属的行业类别",
-            "industry": "具体行业，例如'水利管理业'或'房屋建筑业'，有时可能为空",
+            "industry": "具体行业，例如'水利管理业'或'房屋建筑业'，非资质信息",
             "detail_link": "指向项目详细信息的外部链接，方便用户查阅",
             "detail_info_fetched": "一个布尔值，表示是否已经抓取并存储了该项目的详细信息"
         }
     },
     {
         "table": "tender_key_detail",
-        "summary": "这个表格`tender_key_detail`用于存储招标（tender）的关键详细信息，包括投标价格、施工期限、施工面积、施工成本，以及承包商的资格类型、级别、专业、项目负责人资格等详细要求。",
+        "summary": "这个表格`tender_key_detail`用于存储招标（tender）的关键详细信息，包括投标价格、施工期限、施工面积、施工成本，以及招标的资格类型、级别、专业、项目负责人资格等详细要求。",
         "columns": {
             "tender_id": "招标项目的唯一标识符",
             "bid_price": "招标价格的具体金额,单位元",
             "construction_duration": "工期预计持续时间（单位：天）",
             "construction_area": "总建筑面积，单位平方米",
             "construction_cost": "建安费用的具体金额，单位元",
-            "qualification_type": "承包商的资质类型",
-            "qualification_level": "承包商的资质等级",
+            "qualification_type": "招标的资质类型要求",
+            "qualification_level": "招标的资质等级最低要求",
             "qualification_profession": "总监注册资格证书专业",
             "title_level": "总监职称级别",
             "education": "总监学历",
@@ -144,17 +131,4 @@
             "simultaneous_projects_limit": "总监可以同时承担的项目限制",
             "qualification_profession_addition": "总监的附加信息"
         }
-    },
-    {
-        "table": "users",
-        "summary": "用户管理系统的一部分，存储用户的唯一标识、会话密钥、昵称、权限级别和公司关联信息。",
-        "columns": {
-            "id": "用户记录的唯一标识，自增长整数",
-            "openid": "用户的唯一标识符，字符串类型且在表中具有唯一性约束",
-            "session_key": "用户的会话密钥，可能为空，用于临时认证",
-            "nickname": "用户的昵称，可为空",
-            "permission": "用户的权限级别，用整数表示，默认为0",
-            "company_id": "用户所属公司的ID，整数，可能为空，与`company`表有关联关系"
-        }
-    }
-]
+    }]

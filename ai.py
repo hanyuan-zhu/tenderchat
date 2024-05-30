@@ -1,41 +1,19 @@
 # ai.py
-from config import api_key_qwen,api_key_zhipu
-from utils import clean_sql_query, execute_sql_query, logger,table_details
+from config import api_key_qwen
+from utils import logger, sql_query,table_info
 import json
-from aiModel import ZhipuModel, QwenModel
 import time
-import logging
-import markdown
-
+from aiModel import QwenModel
 from datetime import datetime
 # 获取当前的本地时间
 now = datetime.now()
-# 将日期格式化为 'YYYY-MM-DD' 格式
 local_date_string = now.strftime('%Y-%m-%d %H:%M:%S')
-
-import mysql.connector
-def sql_query(query:str):
-    connection = mysql.connector.connect(
-        host="gz-cdb-5scrcjb5.sql.tencentcdb.com",
-        user="db",
-        password="dbdb905905",
-        database="sele",
-        port=63432  
-    )
-    cursor = connection.cursor()
-    cursor.execute(query)
-    result = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    formatted_result = ", ".join([str(row) for row in result])
-    return formatted_result
-
-
 
 def call_model(llm, messages, max_retries=3):
     for i in range(max_retries):
         try:
-            return llm.call(messages)
+            llm.call(messages)
+            return
         except Exception as e:
             if i < max_retries - 1: 
                 logger.error('在发送请求时发生错误: %s', e)
@@ -43,256 +21,304 @@ def call_model(llm, messages, max_retries=3):
             else: 
                 raise
 
-###### 
-# def get_ai_response(user_input):
-#     tools = [
-#     {
-#     "type": "function",
-#     "function": {
-#         "name": "sql_query",
-#         "description": "执行 MySQL SQL 查询并返回结果。",
-#         "parameters": {
-#             "type": "object",
-#             "properties": {
-#                 "query": {
-#                     "description": "MySQL的命令语句 SQL query。此语句必须符合 SQL 语法规范，确保可以正确执行以获取预期的数据库信息。",
-#                     "type": "string"
-#                 }
-#             },
-#             "required": ["query"]
-#         },
-#         }
-#     },
-#     ]
-
-#     role_setting = '''
-
-#   "整体介绍": "作为专为监理行业招标公告设计的AI助手，我通过直接访问数据库精准响应用户需求，利用sql_tools执行精细SQL查询以提取招标公告信息。",
-# "核心数据库表概览": {
-#     "tender_index": "汇总招标公告基本信息，涵盖公告名字、发布日期等关键字段，适合快速检索公告概览。",
-#     "tender_key_detail": "集中存储招标公告中的重要细节，如价格范围、工期、面积、总造价及具体要求，用于满足对招标核心条件的查询。",
-#     "tender_detail": "提供招标公告其他结构化信息补充，丰富tender_key_detail未涵盖的内容。",
-#     "tender_detail_html": "保存招标公告原文HTML及来源信息，便于查阅原始公告或分析网页结构。",
-#     "announcement_catalog": "公告类型分类，帮助按公告种类进行筛选。",
-#     "announcement_labels": "为公告提供标签，支持通过标签快速定位。",
-#     "company_qualification_type": "收录国家规定的资质类型官方名称列表，用于匹配用户提供的资质简称或模糊描述，提升查询准确性。"
-# }
-#       "查询前强制验证流程": 
-#   {
-#     "绝对验证步骤": 
-#     [
-#       "在执行任何查询之前，AI必须首先调用 'show create table table_name;' 来获取指定表的精确字段名称和结构，无论之前是否有过查询经验。",
-#       "基于获取的表结构，创建一个临时的验证字段列表，该列表仅包含与用户查询需求直接相关的、已验证的字段名。",
-#       "对于每个待查询的表，先执行一个验证查询，如：'SELECT column1, column2 FROM table_name LIMIT 1;'，确保每个字段有效，且数据格式符合预期。",
-#       "仅当验证查询成功，且返回了预期结构的数据时，才允许使用这些字段构建用户查询的最终SQL语句。"
-#     ]
-#   },
-
-#   "查询策略强化":
-#   {
-#     "零假设原则": "在构建任何查询之前，AI不得基于假设推断任何字段名。所有字段名必须直接来源于对数据库的实际探查。",
-#     "先验证后查询": [
-#       "对于每一个用户查询，首要步骤是使用 'show create table table_name;' 来明确每个可能涉及的表的结构和字段名称。",
-#       "基于表结构信息，识别与用户查询最相关的实际字段名，避免使用未经验证的假设性字段。",
-#       "通过执行 'SELECT column1, column2, ... FROM table_name LIMIT 3;' 来验证选取的字段确实包含了预期信息，并确认这些字段与用户查询需求的匹配度。"
-#     ],
-#     "错误处理与自我修正": [
-#       "遭遇查询错误时，立即回溯并检查是否因使用了未经验证的字段名导致。绝不重复同样的错误假设。",
-#       "对于报错信息，如 'Unknown column'，应视为直接指令，立即通过 'show create table' 再次确认正确字段名，避免再次尝试错误的字段。",
-#       "在修正查询前，利用已知的正确字段列表重新规划查询逻辑，必要时通过LIMIT操作小规模验证修正后的查询是否有效。"
-#     ],
-#     "查询逻辑优化": [
-#       "对于复杂查询，应先构建简单查询，逐步增加条件和字段，确保每一步都能正常执行。",
-#       "在查询中尽量避免使用通配符 *，而是明确指定需要的字段，以减少数据传输量和提高查询效率。",
-#       "在使用多表连接时，应明确每个表的连接条件，避免出现笛卡尔积等效率低下的情况。"
-#     ]},
-    
-#   "互动流程": [
-#     "接收用户查询 -> 分析查询需求 -> 强制执行表结构与字段验证 -> 构建验证查询 -> 验证查询成功 -> 构建并执行最终SQL查询 -> 解析查询结果 -> 以专业、简洁的语言反馈用户"
-#   ]
-#     ]
-#     '''
-    
-#     messages = [{"role": "system","content": role_setting}]
-#     messages.append({"role": "user","content": '用户的问题是：' + user_input})
-    
-    
-#     # model_name = "glm-4"
-#     # llm = ZhipuModel(api_key=api_key_zhipu, model=model_name, temperature=0.9,tools=tools)
-#     model_name = "qwen-plus" 
-#     llm = QwenModel(api_key=api_key_qwen, model=model_name, temperature=0.2,tools=tools)
-#     logger.info('AI模型已初始化：%s', model_name)
-#     total_usage = 0
-#     # 下面的循环核心是执行response = llm.call(messages)，如果出现错误，等待一段时间后再次尝试，最多尝试3次
-#     response = call_model(llm, messages)
-#     messages.append(response.message)
-#     total_usage += response.usage["total_tokens"]
-#     logger.info('AI模型已调用：%s', response.message['content'])
-
-    
-#     max_loop_count = 10
-#     loop_count = 0
-#     while loop_count < max_loop_count and ("tool_calls" in response.message):
-#         tool_call = response.message["tool_calls"][0]
-#         args = tool_call["function"]["arguments"]
-#         logger.info('处理工具调用：%s', tool_call["function"]["name"])
-#         logger.info('工具调用参数：%s', args)
-
-        
-#         # 这部分处理tool call，即不同的工具名调用不同的函数
-#         if tool_call["function"]["name"] == "sql_query":
-#             try:
-#                 function_result = sql_query(**json.loads(args))
-#             except Exception as e:
-#                 function_result = {"error": str(e)}
-        
-#         # 添加tool call的结果到 messages序列里。
-#         messages.append({
-#             "role": "tool",
-#             "content": f"{json.dumps(function_result)}",
-#             "tool_call_id":tool_call['id']
-#         })
-        
-#         logger.info('工具调用的结果是：%s', function_result)
-
-        
-#         # 下面的循环核心是执行response = llm.call(messages)，如果出现错误，等待一段时间后再次尝试，最多尝试3次
-#         response = call_model(llm, messages)
-#         total_usage += response.usage["total_tokens"]
-#         messages.append(response.message)
-#         logger.info('AI模型已再次调用，响应是：%s', response.message['content'])
-#     logger.info('AI模型已完成，总共使用的token数：%s。模型名：%s。', total_usage, model_name)
-#     html = markdown.markdown(response.message["content"])
-#     return html
-
-from datetime import date
-
-class DateTimeEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, (date)):
-            return obj.isoformat()  # 将日期对象转换为ISO格式的字符串
-        return super(DateTimeEncoder, self).default(obj)
-
-
-def tables():
-    table_info ='''
-    "核心数据库表概览": {
-    "tender_index": "汇总招标公告基本信息，涵盖公告名字、发布日期等关键字段，适合快速检索公告概览。",
-    "tender_key_detail": "集中存储招标公告中的重要细节，如价格范围、工期、面积、总造价及具体要求，用于满足对招标核心条件的查询。",
-    "tender_detail": "提供招标公告其他结构化信息补充，丰富tender_key_detail未涵盖的内容。",
-    "tender_detail_html": "保存招标公告原文HTML及来源信息，便于查阅原始公告或分析网页结构。",
-    "announcement_catalog": "公告类型分类，帮助按公告种类进行筛选。",
-    "announcement_labels": "为公告提供标签，支持通过标签快速定位。",
-    "company_qualification_type": "收录国家规定的资质类型官方名称列表，用于匹配用户提供的资质简称或模糊描述，提升查询准确性。"
-    }'''
-    return table_info
-
-def get_ai_response(user_input):
+def sqlAgent(user_input):
     tools = [
-    {
-    "type": "function",
-    "function": {
-        "name": "tables",
-        "description": "返回数据库中所有表的名称及简要信息。",
-        "parameters": {
-            "type": "object",
-            "properties": {},
-            "required": []
-        },
-        }
-    },
-    {
-    "type": "function",
-    "function": {
-        "name": "table_details",
-        "description": "查询表的详细架构和前几行数据。",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "tables": {
-                    "description": "表名列表，用于查询表的详细架构。如['table1', 'table2']",
-                    "type": "list"
-                }
+        {
+        "type": "function",
+        "function": {
+            "name": "sql_query",
+            "description": "此函数负责执行传入的MySQL查询语句，并返回查询结果。它专门用于检索数据，不支持修改、删除或更新数据库的操作。这包括但不限于仅执行SELECT查询语句。",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "description": "一个有效的MySQL SELECT查询语句，用于从数据库中检索数据。",
+                        "type": "string"
+                    }
+                },
+                "required": ["query"]
             },
-            "required": ["tables"]
+        },
+        },
+        {
+        "type": "function",
+        "function": {
+            "name": "table_info",
+            "description": "此函数接受一个关键词列表，基于这些关键词进行语义搜索，以识别和返回相关数据库表的结构和样例数据。主要用于获取和展示表的字段结构和前几条记录作为样本，辅助用户理解表的内容。",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "keywords": {
+                        "description": "一个包含关键词的列表，这些关键词用于通过语义搜索来确定相关的数据库表和字段。",
+                        "type": "list[string]"
+                    }
+                },
+                "required": ["keywords"]
+            },
         },
         }
-    },
 
     ]
 
     role_setting = '''
-    **职责**：
-    - 接收用户问题。
-    - 使用给定的Tools来分析问题，确定相关数据库表和字段。
-    - 构建验证查询以获取表结构详情。
-    - 根据验证结果，构建最终的SQL查询语句。
+    AI Agent 概述：
 
-    **工作流程**:
-    1. **理解问题**: 分析用户提问，识别可能涉及的业务领域和数据需求。
-    2. **查询表信息**: 使用`tables` Tool 获取所有表的概览信息，以便初步筛选相关表。
-    3. **获取表详情**: 对于初步筛选出的表，使用`table_details` Tool 获取详细架构和样本数据，进一步确认字段的有效性和数据格式。
-    注意："table_details" Tool 输入参数为表名列表，比如感兴趣的表名是"table1"和"table2"，则输入参数为["table1", "table2"]。
-    4. **构建SQL查询**: 基于验证过的字段信息，构建一个逻辑清晰、针对性强的SQL查询语句。
-    5. **输出**: 向第二个AI代理(QueryExecutor & ResultInterpreter)传递构建好的SQL查询语句。
+    本AI Agent旨在提供一个智能的查询系统，专门为用户提供关于招标和投标信息的查询服务。通过先进的自然语言处理技术，本系统能够理解复杂的用户查询，返回准确的数据库查询结果。
+
+    理解用户问题：
+
+    输入：用户通过界面提出查询请求，例如：“最近三天有什么房建资质乙级能投的标”。
+    处理：AI Agent使用深度学习模型首先解析用户查询，运用实体识别技术识别关键实体（如“最近三天”、“房建资质乙级”、“投标”）和意图（寻找符合条件的招标公告）。
+
+    构造查询内容：
+
+    操作：基于理解的用户意图和实体，AI构造一个适合语义搜索的查询字符串，如[“企业专业资质信息”，“招标公告发布时间”，“项目名称”]，以便检索相关的数据库记录。
+
+    调用融合的 table_info() 工具：
+
+    输入：使用AI构造的查询内容作为参数，调用 table_info(query_inputs) 函数，此函数基于关键词列表查询数据库表结构和样本数据，返回表结构和样本数据。
+    处理：函数内部执行语义搜索，找到与查询内容匹配的表格和字段，然后构造展示表结构和获取样例数据的SQL语句。
+
+    处理并返回结果：
+
+    操作：AI Agent接收到包含表结构和样例数据的响应后，根据这些信息构造与问题相关的SQL语句，使用 sql_query 函数进行查询。此函数专用于执行SELECT查询语句，确保数据检索安全且不修改数据库内容。
+    输出：根据查询结果，回答用户的问题。AI可以格式化输出，提供清晰的信息展示界面，使用户易于理解查询结果。
+
+    错误处理与交互改进：
+
+    如果查询结果不符合预期或AI检测到执行错误：
+    1. AI自动判断错误类型（如查询无结果、结果异常等），并决定是否修正查询关键词或者补充新的查询信息。
+    2. 如果需要更多的字段或表信息，AI将根据新的理解更新查询关键词，并重新调用table_info函数获取更多相关数据表信息。
+    3. 通过友好的用户界面，向用户反馈当前查询状态和任何需要的进一步信息输入，以优化查询结果。用户可以通过界面直接调整查询参数或者重新定义查询条件。
 
     '''
-    
     messages = [{"role": "system","content": role_setting}]
     messages.append({"role": "user","content": '用户的问题是：' + user_input})
     
-    
-    # model_name = "glm-4"
-    # llm = ZhipuModel(api_key=api_key_zhipu, model=model_name, temperature=0.9,tools=tools)
     model_name = "qwen-plus" 
-    llm = QwenModel(api_key=api_key_qwen, model=model_name, temperature=0.2,tools=tools)
+    response = QwenModel(api_key=api_key_qwen, model=model_name, temperature=0.2,tools=tools)
     logger.info('AI模型已初始化：%s', model_name)
     total_usage = 0
-    # 下面的循环核心是执行response = llm.call(messages)，如果出现错误，等待一段时间后再次尝试，最多尝试3次
-    response = call_model(llm, messages)
-    messages.append(response.message)
-    total_usage += response.usage["total_tokens"]
-    logger.info('AI模型已调用：%s', response.message['content'])
+    # 下面的循环核心是执行response.call(messages)，如果出现错误，等待一段时间后再次尝试，最多尝试3次
+    call_model(response, messages)
+    messages.append(response.message_to_append)
+    total_usage += response.total_tokens
+    logger.info('AI模型已调用：%s', response.content)
 
-    
-    max_loop_count = 10
+    max_loop_count = 5
     loop_count = 0
-    while loop_count < max_loop_count and ("tool_calls" in response.message):
-        tool_call = response.message["tool_calls"][0]
-        args = tool_call["function"]["arguments"]
-        logger.info('处理工具调用：%s', tool_call["function"]["name"])
+    while loop_count < max_loop_count and response.tool_calls:
+        args = response.function_args
+        logger.info('处理工具调用：%s', response.function_name)
         logger.info('工具调用参数：%s', args)
 
-        
         # 这部分处理tool call，即不同的工具名调用不同的函数
-        if tool_call["function"]["name"] == "tables":
+        if response.function_name == "sql_query":
             try:
-                function_result = tables()
+                function_result = sql_query(**json.loads(args))
             except Exception as e:
                 function_result = {"error": str(e)}
-        elif tool_call["function"]["name"] == "table_details":
+        elif response.function_name == "table_info":
             try:
-                function_result = table_details(**json.loads(args))
+                function_result = table_info(**json.loads(args))
             except Exception as e:
                 function_result = {"error": str(e)}
 
-        
         # 添加tool call的结果到 messages序列里。
         messages.append({
             "role": "tool",
-            # "content": f"{json.dumps(function_result)}",
-            "content": f"{json.dumps(function_result, cls=DateTimeEncoder)}",
-            "tool_call_id":tool_call['id']
+            "content": f"{function_result}",
+            "tool_call_id":response.tool_calls['id']
         })
         
         logger.info('工具调用的结果是：%s', function_result)
 
-        
         # 下面的循环核心是执行response = llm.call(messages)，如果出现错误，等待一段时间后再次尝试，最多尝试3次
-        response = call_model(llm, messages)
-        total_usage += response.usage["total_tokens"]
-        messages.append(response.message)
-        logger.info('AI模型已再次调用，响应是：%s', response.message['content'])
+        call_model(response, messages)
+        total_usage += response.total_tokens
+        messages.append(response.message_to_append)
+        logger.info('AI模型已再次调用，响应是：%s', response.content)
     logger.info('AI模型已完成，总共使用的token数：%s。模型名：%s。', total_usage, model_name)
-    html = markdown.markdown(response.message["content"])
-    return html
+    return response.content
+
+
+def get_ai_response(user_input):
+    response = sqlAgent(user_input)
+    return response
+    
+    
+    
+# # ###############
+# 以下是待优化的代码，留给将来
+# ###############
+# # Configure logging
+# import json
+# import sys
+# import time
+
+
+# def handle_tool_call(response, tools):
+#     """
+#     根据工具配置和模型响应动态链接适当的函数来处理工具调用。
+
+#     参数:
+#     - response : object, QwenModel 的响应对象，包含工具调用的详细信息。
+#     - tools : list of dict, 每个工具的配置，包括函数名称和其他元数据。
+    
+#     返回:
+#     - 函数调用的结果，或者如果找不到合适的函数或调用失败，则返回错误消息。
+#     """
+#     if not response.tool_calls:
+#         return "根据响应，无需进行工具调用。"
+
+#     current_module = sys.modules[__name__]
+#     function_name = response.function_name
+#     tool_config = next((tool for tool in tools if tool["function"]["name"] == function_name), None)
+    
+#     if tool_config:
+#         if hasattr(current_module, function_name):
+#             func = getattr(current_module, function_name)
+#             try:
+#                 return func(**json.loads(response.function_args))
+#             except Exception as e:
+#                 return {"error": str(e)}
+#         else:
+#             return {"error": f"当前模块中找不到名为 {function_name} 的函数"}
+#     else:
+#         return {"error": f"未找到函数 {function_name} 的工具配置"}
+
+# def abstractAgent(messages, tools, model, max_attempts=5, max_retries=3):
+#     """
+#     处理消息、工具交互和带重试的模型调用的抽象代理函数。
+
+#     参数:
+#     - messages : list of dict, 初始消息，包括角色和内容。
+#     - tools : list of dict, 可用的工具及其配置。
+#     - model : object, 模型类的实例，配备了必要的方法如 call()。
+#     - max_attempts : int, 工具交互循环的最大尝试次数。
+#     - max_retries : int, 调用模型时错误的最大重试次数。
+#     """
+#     total_usage = 0
+
+#     def call_model_with_retries():
+#         for i in range(max_retries):
+#             try:
+#                 response = model.call(messages)
+#                 return response
+#             except Exception as e:
+#                 if i < max_retries - 1:
+#                     logger.error('模型调用错误：%s。正在重试...', e)
+#                     time.sleep(2 ** i)  # 指数退避
+#                 else:
+#                     logger.error('最后尝试失败。错误：%s', e)
+#                     raise
+    
+#     try:
+#         response = call_model_with_retries()
+#         total_usage += response.total_tokens
+#         logger.info('初始模型调用完成，内容：%s', response.content)
+        
+#         for attempt in range(max_attempts):
+#             if not response.tool_calls:
+#                 break
+            
+#             tool_response = handle_tool_call(response, tools)
+#             messages.append({"role": "tool", "content": str(tool_response), "tool_call_id": response.tool_calls['id']})
+#             logger.info('已处理工具调用，结果：%s', tool_response)
+            
+#             response = call_model_with_retries()
+#             logger.info('模型重新调用，更新了消息。')
+
+#     except Exception as e:
+#         logger.error('处理过程中出现错误：%s', str(e))
+#         return {"error": str(e)}
+    
+#     logger.info('抽象代理已完成。总共使用的令牌数：%d。', total_usage)
+#     return response.content
+
+
+# def sqlAgent(user_input):
+#     tools = [
+#         {
+#         "type": "function",
+#         "function": {
+#             "name": "sql_query",
+#             "description": "此函数负责执行传入的MySQL查询语句，并返回查询结果。它专门用于检索数据，不支持修改、删除或更新数据库的操作。这包括但不限于仅执行SELECT查询语句。",
+#             "parameters": {
+#                 "type": "object",
+#                 "properties": {
+#                     "query": {
+#                         "description": "一个有效的MySQL SELECT查询语句，用于从数据库中检索数据。",
+#                         "type": "string"
+#                     }
+#                 },
+#                 "required": ["query"]
+#             },
+#         },
+#         },
+#         {
+#         "type": "function",
+#         "function": {
+#             "name": "table_info",
+#             "description": "此函数接受一个关键词列表，基于这些关键词进行语义搜索，以识别和返回相关数据库表的结构和样例数据。主要用于获取和展示表的字段结构和前几条记录作为样本，辅助用户理解表的内容。",
+#             "parameters": {
+#                 "type": "object",
+#                 "properties": {
+#                     "keywords": {
+#                         "description": "一个包含关键词的列表，这些关键词用于通过语义搜索来确定相关的数据库表和字段。",
+#                         "type": "list[string]"
+#                     }
+#                 },
+#                 "required": ["keywords"]
+#             },
+#         },
+#         }
+
+#     ]
+
+#     role_setting = '''
+#     AI Agent 概述：
+
+#     本AI Agent旨在提供一个智能的查询系统，专门为用户提供关于招标和投标信息的查询服务。通过先进的自然语言处理技术，本系统能够理解复杂的用户查询，返回准确的数据库查询结果。
+
+#     理解用户问题：
+
+#     输入：用户通过界面提出查询请求，例如：“最近三天有什么房建资质乙级能投的标”。
+#     处理：AI Agent使用深度学习模型首先解析用户查询，运用实体识别技术识别关键实体（如“最近三天”、“房建资质乙级”、“投标”）和意图（寻找符合条件的招标公告）。
+
+#     构造查询内容：
+
+#     操作：基于理解的用户意图和实体，AI构造一个适合语义搜索的查询字符串，如[“企业专业资质信息”，“招标公告发布时间”，“项目名称”]，以便检索相关的数据库记录。
+
+#     调用融合的 table_info() 工具：
+
+#     输入：使用AI构造的查询内容作为参数，调用 table_info(query_inputs) 函数，此函数基于关键词列表查询数据库表结构和样本数据，返回表结构和样本数据。
+#     处理：函数内部执行语义搜索，找到与查询内容匹配的表格和字段，然后构造展示表结构和获取样例数据的SQL语句。
+
+#     处理并返回结果：
+
+#     操作：AI Agent接收到包含表结构和样例数据的响应后，根据这些信息构造与问题相关的SQL语句，使用 sql_query 函数进行查询。此函数专用于执行SELECT查询语句，确保数据检索安全且不修改数据库内容。
+#     输出：根据查询结果，回答用户的问题。AI可以格式化输出，提供清晰的信息展示界面，使用户易于理解查询结果。
+
+#     错误处理与交互改进：
+
+#     如果查询结果不符合预期或AI检测到执行错误：
+#     1. AI自动判断错误类型（如查询无结果、结果异常等），并决定是否修正查询关键词或者补充新的查询信息。
+#     2. 如果需要更多的字段或表信息，AI将根据新的理解更新查询关键词，并重新调用table_info函数获取更多相关数据表信息。
+#     3. 通过友好的用户界面，向用户反馈当前查询状态和任何需要的进一步信息输入，以优化查询结果。用户可以通过界面直接调整查询参数或者重新定义查询条件。
+
+#     '''
+#     messages = [{"role": "system","content": role_setting}]
+#     messages.append({"role": "user","content": '用户的问题是：' + user_input})
+    
+#     model_name = "qwen-plus" 
+#     model = QwenModel(api_key=api_key_qwen, model=model_name, temperature=0.2,tools=tools)
+#     response_content = abstractAgent(messages, tools, model)
+#     return response_content
+
+
+
+# def get_ai_response(user_input):
+#     response = sqlAgent(user_input)
+#     return response
+    
