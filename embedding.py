@@ -2,7 +2,6 @@ from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import DashScopeEmbeddings
 import json
 
-
 def embedding():
     # 假设已经有一个包含数据库所有表及其字段摘要的JSON文件
     with open('database_summary.json', 'r') as f:

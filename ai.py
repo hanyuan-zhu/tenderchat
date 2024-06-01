@@ -105,7 +105,7 @@ def sqlAgent(user_input):
     total_usage += response.total_tokens
     logger.info('AI模型已调用：%s', response.content)
 
-    max_loop_count = 5
+    max_loop_count = 10
     loop_count = 0
     while loop_count < max_loop_count and response.tool_calls:
         args = response.function_args
