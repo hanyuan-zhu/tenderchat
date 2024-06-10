@@ -1,3 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Judson&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap');
+
+body {
+    font-family: 'Noto Sans SC', sans-serif;
+
+}
+:root {
+    --background-white1: #f8f9fa;
+    /* f8f9fa */
+    --background-blue1: #F3F6FB;
+    --white: #fff;
+}
+
 @media (max-width: 768px) {
 
     .tab {
@@ -11,11 +25,12 @@
     /* height: 100%;  */
     /* } */
 
-    .agent-container,
     .tab-container {
         display: none;
     }
-
+    .agent-container{
+        display: none !important;
+    }
 
     #tender-select {
         display: none;
@@ -42,11 +57,16 @@
         width: 100%;
         /* Set width to 100% of parent */
         text-align: center;
-        font-family: Arial, sans-serif;
+        /* font-family: Arial, sans-serif; */
         /* Or any font-family of your choice */
+        background-color: var(--background-white1);
     }
 }
+.title {
+    font-family: 'Judson', serif;
+    margin: 8px;
 
+}
 .container {
     display: flex;
     flex-direction: row;
@@ -54,6 +74,7 @@
     gap: 16px;
     padding: 8px;
     justify-content: space-between;
+    background-color: var(--background-blue1);
 }
 .agent-container {
     flex: 9;
@@ -62,9 +83,32 @@
     height: 100%;
     width: 100%;
     border: 1px solid #ddd;
+    background-color: var(--background-white1);
     border-radius: 8px;
     /* margin: 8px; */
     overflow: hidden; /* Ensure no unintended overflow */
+    /* width: 300px; 初始宽度 */
+    transition: width 0.3s ease; /* 平滑过渡 */
+}
+.agent-container.collapsed {
+    flex: 2;
+    /* width: 102px; 收缩后的宽度 */
+}
+.tab-container.collapsed {
+    flex: 2;
+    /* width: 102px; 收缩后的宽度 */
+}
+.agent-header.collapsed {
+    margin: 4px;
+}
+.file-header.collapsed {
+    margin: 4px;
+}
+.agent-container.collapsed #Workspace {
+    display: none; /* 收缩状态下隐藏 */
+}
+.tab-container.collapsed #file-zone #web-links #search-input{
+    display: none; /* 收缩状态下隐藏 */
 }
 #Workspace {
     background-color: #f8f8f8;
@@ -73,6 +117,7 @@
     overflow-y: auto; /* Enable vertical scrolling */
     padding-right: 10px; /* Ensure space for scrollbar */
     flex: 1 1 auto; /* 可伸缩 */
+    transition: opacity 0.3s ease; /* 平滑过渡 */
 }
 /* Optional: Customize scrollbar for better aesthetics */
 #Workspace::-webkit-scrollbar {
@@ -89,10 +134,30 @@
 }
 .agent-header {
     display: flex;
-    justify-content: left;
-    align-items: left;
-    margin: 16px;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px;
     flex: 0 0 auto; /* 不可伸缩 */
+}
+.left-arrow {
+    margin-right: 8px;
+    cursor: pointer;
+    transition: transform 0.5s ease-in-out;
+}
+.right-arrow {
+    margin-right: 8px;
+    cursor: pointer;
+    transition: transform 0.5s ease-in-out;
+}
+.agent-container.collapsed .left-arrow {
+    transform: rotate(180deg);
+}
+.tab-container.collapsed .right-arrow {
+    transform: rotate(180deg);
+}
+.rotate {
+    transform: rotate(180deg);
+    transition: transform 0.5s ease-in-out;
 }
 .agent-avatar {
     display: flex;
@@ -112,13 +177,101 @@
     padding: 8px; /* adjust as needed */
     box-sizing: border-box;
 }
+.agent-container.collapsed .avatar {
+    max-width: 80px; /* 收缩后的头像大小 */
+    max-height: 80px; /* 收缩后的头像大小 */
+}
+
+.search-input {
+    width: 90%;
+    padding: 8px;
+    margin:8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.file-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px;
+    flex: 0 0 auto; /* 不可伸缩 */
+}
+.iframe-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 8px;
+    flex: 0 0 auto; /* 不可伸缩 */
+}
+.file-zone, .web-links {
+    margin-bottom: 8px;
+    padding: 8px;
+}
+
+.file-zone-item, .web-item {
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    border: 1px solid #F2F5FA;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    border-radius: 4px;
+    background-color: #F2F5FA;
+}
+
+.file-zone-big-icon {
+    margin: 8px;
+    font-size: 36px;
+    color: #808080; /* 淡黑色 */;
+}
+
+.file-name {
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-actions {
+    display: flex;
+    gap: 10px;
+}
+.file-actions a {
+    position: relative;
+    display: inline-block;
+}
+
+.file-actions a img {
+    /* 图标颜色改成浅灰色 */
+    filter: invert(0.5);
+}
+
+.file-actions a::after {
+    content: attr(alt); /* 使用图标的alt属性作为文字 */
+    position: absolute;
+    bottom: -20px; /* 根据需要调整这个值 */
+    left: 0;
+    right: 0;
+    text-align: center;
+    visibility: hidden;
+}
+
+.file-actions a:hover::after {
+    visibility: visible; /* 当鼠标悬浮时显示文字 */
+    /* 悬浮时颜色变深 */
+    color: #333;
+}
+
 
 .chat-container {
     display: flex;
     flex-direction: column;
     flex: 17;
     height: 100%;
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
     border-radius: 8px;
     /* margin: 8px; */
 }
@@ -128,9 +281,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
-    background-color: #f8f9fa;
+    padding-bottom: 10px;
+    top: 0;
+    background-color: var(--background-white1);
     border-bottom: 1px solid #eee;
+    min-height: 42px;
+    max-height: 52px;
 }
 
 .navbar .tab {
@@ -144,17 +300,6 @@
     padding: 5px 10px;
     border-radius: 4px;
     text-decoration: none;
-}
-
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #eee;
-    min-height: 42px;
-    max-height: 52px;
 }
 
 #chat-box {
@@ -278,12 +423,12 @@
 }
 
 .background-color {
-    background-color: #f8f9fa;
+    background-color: var(--background-white1);
 }
 
 /* 用户消息样式 */
 .user-message {
-    background-color: #EFF2F5;
+    background-color:var(--white);
     /* 浅灰色背景 */
     color: #333;
     /* 文本颜色 */
@@ -374,6 +519,7 @@
     margin-bottom: -2px;
     font-size: 16px;
     transition: color 0.3s;
+    margin-left: 16px;
 }
 
 .tab:hover,

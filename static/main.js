@@ -128,3 +128,155 @@ window.onload = function () {
     document.querySelector('.tabs .tab').click();
 };
 
+document.getElementById('arrow-icon-left').addEventListener('click', function() {
+
+    const container = document.querySelector('.agent-container');
+    container.classList.toggle('collapsed');
+    const workspace = document.getElementById('Workspace');
+    if (container.classList.contains('collapsed')) {
+        workspace.style.display = 'none';
+    } else {
+        workspace.style.display = 'block';
+    }
+});
+document.getElementById('arrow-icon-right').addEventListener('click', function() {
+
+    const container = document.querySelector('.tab-container');
+    container.classList.toggle('collapsed');
+
+    const filezone = document.getElementById('file-zone');
+    const webzone = document.getElementById('web-links');
+    const searchinput = document.getElementById('search-input');
+    if (container.classList.contains('collapsed')) {
+        filezone.style.display = 'none';
+        webzone.style.display = 'none';
+        searchinput.style.display = 'none';
+    } else {
+        filezone.style.display = 'block';
+        webzone.style.display = 'block';
+        searchinput.style.display = 'block';
+    }
+});
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     fetch('/file')
+//         .then(response => response.json())
+//         .then(data => {
+//             const announcementList = document.getElementById('announcement-list');
+//             data.forEach(item => {
+//                 const div = document.createElement('div');
+//                 div.classList.add('announcement-item');
+//                 div.innerHTML = `
+//                     <div class="icon">📄</div>
+//                     <div class="details">${item.name}</div>
+//                     <div class="actions">
+//                         <a href="${item.link}" target="_blank">查看</a>
+//                         <a href="${item.download_link}" download>下载</a>
+//                     </div>
+//                 `;
+//                 announcementList.appendChild(div);
+//             });
+//         });
+
+//     fetch('/web')
+//         .then(response => response.json())
+//         .then(data => {
+//             const webList = document.getElementById('web-list');
+//             data.forEach(item => {
+//                 const div = document.createElement('div');
+//                 div.classList.add('web-item');
+//                 div.innerHTML = `
+//                     <div class="icon">🌐</div>
+//                     <div class="details">${item.name}</div>
+//                     <div class="actions">
+//                         <a href="${item.link}" target="_blank">查看</a>
+//                     </div>
+//                 `;
+//                 webList.appendChild(div);
+//             });
+//         });
+// });
+// 假数据：
+document.addEventListener('DOMContentLoaded', function() {
+    // 假数据
+    const fileData = [
+        {
+            name: "华润水泥（罗定）有限公司2024年6月-罗定水泥-六价铬（VI）测定仪（固定资产）-公开询比价询价结果公告",
+            link: "https://www.baidu.com/",
+            download_link: "#"
+        },
+        {
+            name: "华润水泥（罗定）有限公司2024年7月-罗定水泥-氮氧化物测定仪（固定资产）-公开询比价询价结果公告",
+            link: "#",
+            download_link: "#"
+        }
+    ];
+
+    const webData = [
+        {
+            name: "华润水泥（罗定）有限公司2024年6月-罗定水泥-六价铬（VI）测定仪（固定资产）-公开询比价询价结果公告",
+            link: "https://www.baidu.com/"
+        },
+        {
+            name: "华润水泥（罗定）有限公司2024年6月-罗定水泥-六价铬（VI）测定仪（固定资产）-公开询比价询价结果公告",
+            link: "#"
+        }
+    ];
+
+    // 渲染文件数据
+    const announcementList = document.getElementById('file-zone-item-list');
+    fileData.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('file-zone-item');
+        div.innerHTML = `
+            <div class="file-zone-big-icon">📄</div>
+            <div class="file-name">${item.name}</div>
+            <div class="file-actions">
+                <a href="${item.link}" target="_blank" class="view-button"><img src="${eyeIconUrl}" alt="查看"></a>
+                <a href="${item.download_link}" download><img src="${downloadIconUrl}" alt="下载"></a>
+            </div>
+        `;
+        announcementList.appendChild(div);
+    });
+
+    // 渲染网页数据
+    const webList = document.getElementById('web-list');
+    
+    webData.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('web-item');
+        div.innerHTML = `
+            <div class="file-zone-big-icon">🔗</div>
+            <div class="file-name">${item.name}</div>
+            <div class="file-actions">
+                <a href="${item.link}" target="_blank" class="view-button"><img src="${eyeIconUrl}" alt="查看"></a>
+                <a href="${item.link}" target="_blank"><img src="${browserIconUrl}" alt="浏览器中打开"></a>
+            </div>
+        `;
+        webList.appendChild(div);
+    });
+
+    document.querySelectorAll('.view-button').forEach(button => {
+    button.addEventListener('click', event => {
+        event.preventDefault();
+        document.getElementById('iframe').src = event.currentTarget.href;
+        document.getElementById('iframe-container').style.display = 'block';
+
+        // 隐藏元素
+        document.querySelectorAll('.file-header, .file-zone, .web-links').forEach(element => {
+            element.style.display = 'none';
+        });
+    });
+});
+
+document.getElementById('back-button').addEventListener('click', () => {
+    document.getElementById('iframe-container').style.display = 'none';
+
+    // 显示元素
+    document.querySelectorAll('.file-header, .file-zone, .web-links').forEach(element => {
+        element.style.display = '';
+    });
+});
+});
+
+
