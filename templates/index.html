@@ -21,6 +21,18 @@
             </div>
         </nav>
         <div class="container">
+            <div class="agent-container">
+                <div class="agent-header">
+                   工作区
+                </div>
+                <div class="agent-avatar">
+                    <img src="{{ url_for('static', filename='avatar1.gif') }}" alt="Avatar" class="avatar">
+                </div>
+                <div id="Workspace" class="tab-content">
+                    <!-- Workspace content will show here -->
+                </div>
+                
+            </div>
             <div class="chat-container">
                 <div id="chat-box" >
                     <!-- userinput和ai 消息对话展示区域 -->
@@ -33,15 +45,15 @@
             </div>
             <div id="tab-container" class="tab-container">
                 <div class="tabs">
-                    <button class="tab" onclick="openTab(event, 'Workspace')">机器人日志</button>
+                    <!-- <button class="tab" onclick="openTab(event, 'Workspace')">机器人日志</button> -->
                     <button class="tab" onclick="openTab(event, 'Detail')">标讯详情</button>
                     <button class="tab" onclick="openTab(event, 'Web')">网页工具</button>
                 </div>
 
                 <div id="log-container" class="log-container">
-                    <div id="Workspace" class="tab-content">
+                    <!-- <div id="Workspace" class="tab-content">-->
                         <!-- Workspace content will show here -->
-                    </div>
+                    <!--</div> -->
                     <div id="Detail" class="tab-content">
                         <!-- Detail content will show here -->
                     </div>

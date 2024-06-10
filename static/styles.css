@@ -11,12 +11,11 @@
     /* height: 100%;  */
     /* } */
 
+    .agent-container,
     .tab-container {
         display: none;
-        /* Hide the log-container by default */
-        flex: 3;
-        height: 100%;
     }
+
 
     #tender-select {
         display: none;
@@ -31,11 +30,11 @@
     .tab-container {
         display: block;
         /* Show the log-container when the viewport width is greater than 768px */
-        flex: 3;
+        flex: 11;
         height: 100%;
         border: 1px solid #ddd;
         border-radius: 8px;
-        margin: 8px;
+        /* margin: 8px; */
         overflow-y: auto;
         /* Add vertical scroll when content overflows */
         overflow-x: hidden;
@@ -52,16 +51,76 @@
     display: flex;
     flex-direction: row;
     height: calc(100vh - 66px);
+    gap: 16px;
+    padding: 8px;
+    justify-content: space-between;
+}
+.agent-container {
+    flex: 9;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    /* margin: 8px; */
+    overflow: hidden; /* Ensure no unintended overflow */
+}
+#Workspace {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 4px;
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding-right: 10px; /* Ensure space for scrollbar */
+    flex: 1 1 auto; /* 可伸缩 */
+}
+/* Optional: Customize scrollbar for better aesthetics */
+#Workspace::-webkit-scrollbar {
+    width: 10px;
+}
+
+#Workspace::-webkit-scrollbar-thumb {
+    background-color: #cccccc;
+    border-radius: 10px;
+}
+
+#Workspace::-webkit-scrollbar-track {
+    background-color: #f8f8f8;
+}
+.agent-header {
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    margin: 16px;
+    flex: 0 0 auto; /* 不可伸缩 */
+}
+.agent-avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    flex: 0 0 auto; /* 不可伸缩 */
+}
+
+.avatar {
+    max-width: 200px;
+    max-height: 200px;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    padding: 8px; /* adjust as needed */
+    box-sizing: border-box;
 }
 
 .chat-container {
     display: flex;
     flex-direction: column;
-    flex: 7;
+    flex: 17;
     height: 100%;
     border: 1px solid #ddd;
     border-radius: 8px;
-    margin: 8px;
+    /* margin: 8px; */
 }
 
 /* 导航栏样式 */
