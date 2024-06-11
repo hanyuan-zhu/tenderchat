@@ -7,8 +7,8 @@ import mysql.connector
 # Third party imports
 from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 # Local application imports
-from ai import get_ai_response
-# from aidemo import get_ai_response
+# from ai import get_ai_response
+from aidemo import get_ai_response
 from config import app_secret_key,database_config
 from utils import logger
 
