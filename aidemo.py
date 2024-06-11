@@ -4,26 +4,37 @@ import time
 from utils import logger
 
 # 预定义的对话内容
-dialogue = [
+dialogue1 = [
     {
-        "role": "AI",
-        "content": "现在新员工按通知来公司了，现在要开始办理入职手续，接下来具体做什么？"
-    },
-    {
-        "role": "AI",
+        
         "content": "**欢迎并引导:**\n- 请先热情欢迎新员工，自我介绍，并引导他们到指定区域开始办理入职。\n\n**核实并收集资料:**\n- 请确认新员工携带了所有需要的文件，包括身份证、学历证明、体检报告和离职证明（如适用）。\n- 准备收集这些文件的复印件或电子版。\n\n**填写表格提醒:**\n- 待文件核对后，将指导新员工填写《员工履历表》与《岗位申请表》，确保信息无误。\n\n**接下来是合同签署:**\n- 准备好劳动合同，稍后将解释合同条款并安排签署。\n\n请开始第一步并告诉我完成后的情况。"
     },
     {
-        "role": "AI",
-        "content": "我已经完成了员工欢迎。现在要开始收集资料。"
+        
+        "content": "**收集资料:**\n- 请收集新员工的身份证正反面复印件进行身份验证。\n- 收取最高学历及学位证书复印件，确认教育背景。\n- 确保获取近期体检报告复印件，检查健康状况。\n- 如果适用，收集离职证明复印件。\n- 不要忘记询问并收取专业资格证书扫描件（如适用）。\n\n**紧急联系与银行信息:**\n- 之后，记录新员工提供的紧急联系人信息和个人银行账户详情，以处理薪资发放事宜。\n- 如公司政策涉及，也请收集公积金账号信息。\n\n开始执行并告诉我完成这些步骤的情况。"
+    },
+    {
+        
+        "content": "**资料收集进度确认:**\n- 已收到身份证、学位证、离职证明的文件，了解体检报告将后续补充。\n\n**紧急联系人信息确认:**\n- 紧急联系人：张三，关系：母亲，电话：13311001100。已记录。\n\n**银行账户信息确认:**\n- 银行：中国银行，账号：4411229988443311。已登记。\n\n**公积金账户说明:**\n- 新员工目前未建立公积金账户，此信息可在未来补全。\n\n接下来，请指导新员工填写《员工履历表》和《岗位申请表》，确保所有信息准确无误。完成后，请通知我，以便进行合同签署的准备。"
     }
 ]
 
+dialogue2 = [
+    {
+        "content": """尊敬的东方建设集团，根据您的资质与偏好，我们为您找到了最近3日内符合要求的15条招标公告，具体如下：<table border="1"><tr><th>招标编号</th><th>项目名称</th><th>地区</th><th>项目规模</th><th>招标价格</th><th>截止日期</th></tr><tr><td>B001</td><td>堡油路养护维修工程</td><td>浙江</td><td>大型</td><td>20000000</td><td>2023/4/10</td></tr><tr><td>B002</td><td>鹤立西路（林海公路-沪南公路）改建工程</td><td>江苏</td><td>中型</td><td>15000000</td><td>2023/4/12</td></tr><tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>B015</td><td>黄浦江中上游堤防防洪能力提升工程（二期）</td><td>上海</td><td>大型</td><td>30000000</td><td>2023/4/15</td></tr>
+</table> <br> 以上项目均要求一级资质，且覆盖道路工程或桥梁建设领域，与您的主营业务范围完美匹配。请您及时查阅详细信息并考虑参与投标。祝您投标成功"""
+    }
+    
+]
+
 # 预定义的日志内容
-log_messages = [
+log_messages1 = [
     "AI模型已初始化",
     "正在处理用户输入",
     "生成对话内容"
+]
+log_messages2 = [
+    "**问题解析机器人**：\n- 正在识别用户意图：用户想要了解近期符合其资质和偏好的招标公告。\n- 正在提取用户数据：从用户偏好配置表中获取U001的详细信息，包括资质等级（一级）、主营业务范围（道路工程,桥梁建设）、地区偏好（上海,江苏,浙江）、项目规模偏好（大型,中型）、预算范围（10000000-50000000）等。\n- 正在确定筛选条件：依据提取的用户数据，设置筛选招标公告的条件，包括时间（最近）、资质、业务范围、地区、规模、预算等。\n\n**招标数据机器人**：\n- 正在查询数据库：根据上述条件，在招标公告数据库中搜索匹配项。\n- 正在数据分析：发现近3日内共有15条招标公告符合要求，其中10条位于浙江，3条在江苏，2条在上海，全部属于道路工程或桥梁建设项目，均要求一级资质，项目规模和预算范围也与用户偏好相符。\n- 准备数据输出：整理这15条招标公告的关键信息，包括招标编号、项目名称、地区、项目规模、预算、截止日期等，准备传递给回答机器人。\n\n**回答机器人**：\n- 正在组织信息：将招标数据整理成易于阅读的格式，如表格，确保包含用户最关心的信息点。\n- 准备个性化回复：根据整理的信息，形成友好且专业的回答，强调匹配度高和关键时间点，以便用户快速决策。"
 ]
 
 # 用于记录日志进度的索引
@@ -33,23 +44,22 @@ log_index = 0
 dialogue_index = 0
 
 def get_ai_response(user_input):
-    global log_index, dialogue_index
+    global log_index, dialogue_index, log_messages2, dialogue2
 
     # 生成预定义的日志信息
-    if log_index < len(log_messages):
-        logger.info(log_messages[log_index])
-        log_message = log_messages[log_index]
+    if log_index < len(log_messages2):
+        logger.info(log_messages2[log_index])
+        log_messages = log_messages2[log_index]
         log_index += 1  # 增加日志索引以记录下一个日志信息
+        # 确保日志输出完成后再输出dialogue
+        if dialogue_index < len(dialogue2):
+            response = dialogue2[dialogue_index]
+            dialogue_index += 1
+            full_response = f" {response['content']}"
     else:
-        log_message = "Logger: 未定义的日志信息。"
-
-    # 简单逻辑：返回对话列表中的下一个内容
-    if dialogue_index < len(dialogue):
-        response = dialogue[dialogue_index]
-        dialogue_index += 1
-        full_response = f"{response['role']}: {response['content']}"
-    else:
-        full_response = "已准备的demo结束。"
+        log_messages = "Logger: 未定义的日志信息。"
+        if dialogue_index < len(dialogue2):
+            full_response = "已准备的demo结束。"
 
     # 模拟逐字符输出并将其组合成一个字符串返回
     simulated_typing = ""
