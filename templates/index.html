@@ -9,12 +9,13 @@
     
 </head>
 <body>
-    <div class="background-color">
+    <div>
         <!-- 导航栏 -->
         <nav class="navbar">
            <!-- 用字体judson写标题buildsense ai -->
             <div class="title"><b>BuildSense AI</b> </div>
             <div class="tab">对话：<span class="date"></span></div>
+            <button onclick="toggleTheme()">切换主题</button>
             <div class="dropdown">
                 <a href="#" class="username dropdown-toggle">{{ session['username'] }}</a>
                 <div class="dropdown-menu"> <!-- 下拉菜单内容 -->
@@ -45,22 +46,24 @@
                     <button onclick="sendMessage()" class="button">发送</button>
                 </div>
             </div>
-            <div id="tab-container" class="tab-container">
+            <div id="file-container" class="file-container">
                 <!-- 标题区域，带一个向右的图标 -->
                 <div class="file-header">
                     文件预览
                     <img src="{{ url_for('static', filename='right-arrow-icon.png') }}" alt="right Arrow" class="right-arrow" id="arrow-icon-right">
                 </div>
-                <input type="text" class="search-input" id="search-input" placeholder="请输入搜索内容...">
+                <!-- <input type="text" class="search-input" id="search-input" placeholder="请输入搜索内容..."> -->
 
-                <div class="file-zone" id="file-zone">
-                    <p style="color: grey;text-align: left;font-size: 12px;">招标公告</p>
-                    <div id="file-zone-item-list"></div>
-                </div>
+               
 
                 <div class="web-links" id="web-links">
                     <p style="color: grey;text-align: left;font-size: 12px;">网页链接</p>
                     <div id="web-list"></div>
+                </div>
+
+                <div class="file-zone" id="file-zone">
+                    <p style="color: var(--navtext);text-align: left;font-size: 12px;">相关文件</p>
+                    <div id="file-zone-item-list"></div>
                 </div>
 
                 <div id="iframe-container" style="display: none;">

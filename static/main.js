@@ -1,3 +1,7 @@
+function toggleTheme() {
+    document.body.classList.toggle('theme-dark');
+}
+
 // 创建一个新的 Date 当日日期对象
 var now = new Date();
 // 将 Date 对象转换为北京时间的日期字符串
@@ -59,6 +63,14 @@ function sendMessage() {
             aiDiv.className = 'ai-message';
             aiDiv.innerHTML = formattedText;
             chatBox.appendChild(aiDiv);
+
+            // 检查AI回复是否包含特定文字，并根据条件显示或隐藏文件预览窗口
+            if (formattedText.includes("请查阅右侧参考文档")) {
+                document.getElementById("file-container").style.display = "block";
+            } else {
+                document.getElementById("file-container").style.display = "none";
+            }
+
             // 滚动到最新消息
             setTimeout(() => {
                 chatBox.scrollTop = chatBox.scrollHeight;
@@ -120,7 +132,7 @@ document.getElementById('arrow-icon-left').addEventListener('click', function() 
 });
 document.getElementById('arrow-icon-right').addEventListener('click', function() {
 
-    const container = document.querySelector('.tab-container');
+    const container = document.querySelector('.file-container');
     container.classList.toggle('collapsed');
 
     const filezone = document.getElementById('file-zone');
@@ -177,28 +189,51 @@ document.getElementById('arrow-icon-right').addEventListener('click', function()
 // });
 // 假数据：
 document.addEventListener('DOMContentLoaded', function() {
+    
     // 假数据
     const fileData = [
+        // {
+        //     name: "华润水泥（罗定）有限公司2024年6月-罗定水泥-六价铬（VI）测定仪（固定资产）-公开询比价询价结果公告",
+        //     link: "https://www.baidu.com/",
+        //     download_link: "#"
+        // },
+        // {
+        //     name: "华润水泥（罗定）有限公司2024年7月-罗定水泥-氮氧化物测定仪（固定资产）-公开询比价询价结果公告",
+        //     link: "#",
+        //     download_link: "#"
+        // },
         {
-            name: "华润水泥（罗定）有限公司2024年6月-罗定水泥-六价铬（VI）测定仪（固定资产）-公开询比价询价结果公告",
+            name: "员工手册.pdf",
             link: "https://www.baidu.com/",
             download_link: "#"
         },
         {
-            name: "华润水泥（罗定）有限公司2024年7月-罗定水泥-氮氧化物测定仪（固定资产）-公开询比价询价结果公告",
+            name: "新员工入职流程.docx",
             link: "#",
             download_link: "#"
         }
     ];
 
     const webData = [
+        // {
+        //     name: "华润水泥（罗定）有限公司2024年6月-罗定水泥-六价铬（VI）测定仪（固定资产）-公开询比价询价结果公告",
+        //     link: "https://www.baidu.com/"
+        // },
+        // {
+        //     name: "华润水泥（罗定）有限公司2024年6月-罗定水泥-六价铬（VI）测定仪（固定资产）-公开询比价询价结果公告",
+        //     link: "#"
+        // },
         {
-            name: "华润水泥（罗定）有限公司2024年6月-罗定水泥-六价铬（VI）测定仪（固定资产）-公开询比价询价结果公告",
-            link: "https://www.baidu.com/"
+            name:"荔湾区葵蓬南住房项目基坑支护工程设计施工总承包SL202404300060",
+            link:"https://www.ggzy.gov.cn/information/html/a/440000/0105/202405/01/00449da3b9d0609c437cb52ba430784bfc5d.shtml"
         },
         {
-            name: "华润水泥（罗定）有限公司2024年6月-罗定水泥-六价铬（VI）测定仪（固定资产）-公开询比价询价结果公告",
-            link: "#"
+            name:"荔湾区公安分局档案中心大楼改造工程",
+            link:"https://ygp.gdzwfw.gov.cn/ggzy-portal/#/44/new/jygg/v3/A?noticeId=eeaa02ca-685d-40c9-b68e-cf05f4aa263a&projectCode=E4401000002401274001&bizCode=3C52&siteCode=440100&publishDate=20240430020018&source=%E5%B9%BF%E4%BA%A4%E6%98%93%E6%95%B0%E5%AD%97%E4%BA%A4%E6%98%93%E5%B9%B3%E5%8F%B0&titleDetails=%E5%B7%A5%E7%A8%8B%E5%BB%BA%E8%AE%BE"
+        },
+        {
+            name:"荔湾区委党校建设工程勘察设计",
+            link:"https://www.ggzy.gov.cn/information/html/a/440000/0102/202404/29/0044a73477d2875d43eaa9f4fb5db2cf868c.shtml"
         }
     ];
 

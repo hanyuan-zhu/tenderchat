@@ -3,70 +3,101 @@
 
 body {
     font-family: 'Noto Sans SC', sans-serif;
+    background-color: var(--background1);
+    /* 字体颜色 */
+    color: var(--text);
 
 }
+
+.theme-dark {
+    /* 默认颜色方案 */
+    --background1: #f8f9fa; /* 浅灰色 */
+    --background2: #F3F6FB; /* 浅蓝色 */
+    --text:#333;
+    --border:#ddd;
+    --scrollbar: #e2e2e2;
+    --scrollbarbg:#f8f8f8;
+
+    --list:#F2F5FA;
+    --navtext:#9cacbc;
+    --inputfocus:#e6e47c;
+    /* button */
+    --butbg:#fff;
+    --buttext:#000;
+    --buthover:#1a1a1a;
+    /* chat  */
+    --userbg:#fff;
+    --usertext:#333;
+    --aibg:#0078D7;
+    --aitext:#fff;
+}
+
+/* 深色主题样式，当checkbox被选中时应用 */
 :root {
-    --background-white1: #f8f9fa;
-    /* f8f9fa */
-    --background-blue1: #F3F6FB;
-    --white: #fff;
+    /* 暗色主题颜色方案 */
+    --background1: #333; /* 深灰色 */
+    --background2: #1A202C; /* 深蓝色 */
+    --text:#cbcbcb;
+    --border:#222222;
+    --scrollbar: #3a3a3a;
+    --scrollbarbg:#2b2b2b;
+
+    --list:#34373e;
+    --navtext:#9cacbc;
+    --inputfocus:#bebc46;
+    /* button */
+    --butbg:#2d2d2d;
+    --buttext:#fff;
+    --buthover:#535353;
+    /* chat  */
+    --userbg:#4e4e4e;
+    --usertext:#e4e4e4;
+    --aibg:#4e4e4e;
+    --aitext:#fff;
+    
 }
 
 @media (max-width: 768px) {
-
     .tab {
         text-align: center;
         /* 在小屏幕上居中 */
     }
-
-    /* .log-container { */
-    /* display: none; Hide the log-container by default */
-    /* flex: 3; */
-    /* height: 100%;  */
-    /* } */
-
-    .tab-container {
+    .file-container {
         display: none;
     }
-    .agent-container{
+    .agent-container {
         display: none !important;
     }
-
     #tender-select {
         display: none;
         /* 在屏幕宽度小于768px时不显示输入框 */
     }
-
 }
 
 @media screen and (min-width: 768px) {
 
     /* 在大屏幕上的样式 */
-    .tab-container {
-        display: block;
-        /* Show the log-container when the viewport width is greater than 768px */
+    .file-container {
+        display: none;
         flex: 11;
         height: 100%;
-        border: 1px solid #ddd;
+        border: 1px solid var(--border);
         border-radius: 8px;
-        /* margin: 8px; */
         overflow-y: auto;
-        /* Add vertical scroll when content overflows */
         overflow-x: hidden;
-        /* Prevent horizontal scroll */
         width: 100%;
-        /* Set width to 100% of parent */
         text-align: center;
-        /* font-family: Arial, sans-serif; */
-        /* Or any font-family of your choice */
-        background-color: var(--background-white1);
+        background-color: var(--background1);
     }
 }
+
 .title {
     font-family: 'Judson', serif;
     margin: 8px;
-
+    
+    font-size: 24px;
 }
+
 .container {
     display: flex;
     flex-direction: row;
@@ -76,95 +107,113 @@ body {
     justify-content: space-between;
     background-color: var(--background-blue1);
 }
+
 .agent-container {
     flex: 9;
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 100%;
-    border: 1px solid #ddd;
-    background-color: var(--background-white1);
+    border: 1px solid var(--border);
+    background-color: var(--background1);
     border-radius: 8px;
-    /* margin: 8px; */
-    overflow: hidden; /* Ensure no unintended overflow */
-    /* width: 300px; 初始宽度 */
-    transition: width 0.3s ease; /* 平滑过渡 */
+    overflow: hidden;
+    transition: width 0.3s ease;
 }
+
 .agent-container.collapsed {
     flex: 2;
-    /* width: 102px; 收缩后的宽度 */
 }
-.tab-container.collapsed {
+
+.file-container.collapsed {
     flex: 2;
-    /* width: 102px; 收缩后的宽度 */
 }
+
 .agent-header.collapsed {
     margin: 4px;
 }
+
 .file-header.collapsed {
     margin: 4px;
 }
+
 .agent-container.collapsed #Workspace {
-    display: none; /* 收缩状态下隐藏 */
+    display: none;
 }
-.tab-container.collapsed #file-zone #web-links #search-input{
-    display: none; /* 收缩状态下隐藏 */
+
+.file-container.collapsed #file-zone #web-links #search-input {
+    display: none;
 }
+
 #Workspace {
-    background-color: #f8f8f8;
+    background-color: var(--background1);
     padding: 20px;
     border-radius: 4px;
-    overflow-y: auto; /* Enable vertical scrolling */
-    padding-right: 10px; /* Ensure space for scrollbar */
-    flex: 1 1 auto; /* 可伸缩 */
-    transition: opacity 0.3s ease; /* 平滑过渡 */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    padding-right: 10px;
+    /* Ensure space for scrollbar */
+    flex: 1 1 auto;
+    /* 可伸缩 */
+    transition: opacity 0.3s ease;
+    /* 平滑过渡 */
 }
+
 /* Optional: Customize scrollbar for better aesthetics */
-#Workspace::-webkit-scrollbar {
+::-webkit-scrollbar {
     width: 10px;
 }
 
-#Workspace::-webkit-scrollbar-thumb {
-    background-color: #cccccc;
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar);/* 滑块颜色 */
     border-radius: 10px;
 }
 
-#Workspace::-webkit-scrollbar-track {
-    background-color: #f8f8f8;
+::-webkit-scrollbar-track {
+    background-color: var(--scrollbarbg);/* 轨道颜色 */
 }
+
 .agent-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 8px;
-    flex: 0 0 auto; /* 不可伸缩 */
+    flex: 0 0 auto;
+    /* 不可伸缩 */
 }
+
 .left-arrow {
     margin-right: 8px;
     cursor: pointer;
     transition: transform 0.5s ease-in-out;
 }
+
 .right-arrow {
     margin-right: 8px;
     cursor: pointer;
     transition: transform 0.5s ease-in-out;
 }
+
 .agent-container.collapsed .left-arrow {
     transform: rotate(180deg);
 }
-.tab-container.collapsed .right-arrow {
+
+.file-container.collapsed .right-arrow {
     transform: rotate(180deg);
 }
+
 .rotate {
     transform: rotate(180deg);
     transition: transform 0.5s ease-in-out;
 }
+
 .agent-avatar {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
-    flex: 0 0 auto; /* 不可伸缩 */
+    flex: 0 0 auto;
+    /* 不可伸缩 */
 }
 
 .avatar {
@@ -174,56 +223,64 @@ body {
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    padding: 8px; /* adjust as needed */
+    padding: 8px;
     box-sizing: border-box;
 }
+
 .agent-container.collapsed .avatar {
-    max-width: 80px; /* 收缩后的头像大小 */
-    max-height: 80px; /* 收缩后的头像大小 */
+    max-width: 80px;
+    max-height: 80px;
 }
 
 .search-input {
     width: 90%;
     padding: 8px;
-    margin:8px;
-    border: 1px solid #ddd;
+    margin: 8px;
+    border: 1px solid var(--border);
     border-radius: 4px;
     box-sizing: border-box;
 }
+
 .file-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 8px;
-    flex: 0 0 auto; /* 不可伸缩 */
+    flex: 0 0 auto;
 }
+
 .iframe-header {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     margin: 8px;
-    flex: 0 0 auto; /* 不可伸缩 */
+    flex: 0 0 auto;
 }
-.file-zone, .web-links {
+
+.file-zone,
+.web-links {
     margin-bottom: 8px;
     padding: 8px;
 }
 
-.file-zone-item, .web-item {
+.file-zone-item,
+.web-item {
     display: flex;
     align-items: center;
     padding: 6px;
-    border: 1px solid #F2F5FA;
+    border: 1px solid var(--list);
     border-radius: 4px;
     margin-bottom: 4px;
     border-radius: 4px;
-    background-color: #F2F5FA;
+    background-color: var(--list);
 }
 
 .file-zone-big-icon {
     margin: 8px;
     font-size: 36px;
-    color: #808080; /* 淡黑色 */;
+    /* color: #808080; */
+    /* 淡黑色 */
+    ;
 }
 
 .file-name {
@@ -233,26 +290,29 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: left;
 }
 
 .file-actions {
     display: flex;
     gap: 10px;
 }
+
 .file-actions a {
     position: relative;
     display: inline-block;
 }
 
 .file-actions a img {
-    /* 图标颜色改成浅灰色 */
     filter: invert(0.5);
 }
 
 .file-actions a::after {
-    content: attr(alt); /* 使用图标的alt属性作为文字 */
+    content: attr(alt);
+    /* 使用图标的alt属性作为文字 */
     position: absolute;
-    bottom: -20px; /* 根据需要调整这个值 */
+    bottom: -20px;
+    /* 根据需要调整这个值 */
     left: 0;
     right: 0;
     text-align: center;
@@ -260,7 +320,8 @@ body {
 }
 
 .file-actions a:hover::after {
-    visibility: visible; /* 当鼠标悬浮时显示文字 */
+    visibility: visible;
+    /* 当鼠标悬浮时显示文字 */
     /* 悬浮时颜色变深 */
     color: #333;
 }
@@ -271,9 +332,7 @@ body {
     flex-direction: column;
     flex: 17;
     height: 100%;
-    /* border: 1px solid #ddd; */
     border-radius: 8px;
-    /* margin: 8px; */
 }
 
 /* 导航栏样式 */
@@ -283,20 +342,22 @@ body {
     align-items: center;
     padding-bottom: 10px;
     top: 0;
-    background-color: var(--background-white1);
-    border-bottom: 1px solid #eee;
+    background-color: var(--background1);
+    border-bottom: 1px solid var(--background1);
     min-height: 42px;
     max-height: 52px;
 }
 
 .navbar .tab {
+    flex-grow: 1; /* 让标题占据多余空间，但仍然靠左 */
     text-align: left;
+    padding-left: 16px;
     /* 在大屏幕上居左 */
 }
 
 .navbar .username {
-    background-color: #f9fbfd;
-    color: rgb(151, 174, 196);
+    background-color: var(--background1);
+    color: var(--navtext);
     padding: 5px 10px;
     border-radius: 4px;
     text-decoration: none;
@@ -315,58 +376,45 @@ body {
 #chat-input {
     width: calc(100% - 90px);
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border);
     border-radius: 8px;
     margin: 8px;
-    background-color: #f8f9fa;
+    background-color: var(--background1);
     flex-grow: 1;
     min-height: 10vh;
     /* 让输入框占用剩余的空间 */
 }
 
 #chat-input:focus {
-    outline: 2px solid #e6e47c;
+    outline: 2px solid var(--inputfocus);
     /* Change 'orange' to your preferred color */
 }
 
 
 .chat-container button {
     padding: 10px 20px;
-    background-color: #ffffff;
-    /* Default white background color */
-    color: #000000;
-    /* Default black text color */
-    border: 2px solid #000000;
-    /* Black border */
+    background-color: var(--butbg);
+    color: var(--buttext);
+    border: 2px solid var(--buttext);
     border-radius: 8px;
-    /* Rounded edges for the pill shape */
     cursor: pointer;
-    /* Changes the cursor to a pointer when hovering over the button */
     outline: none;
-    /* Removes the outline to keep the style clean */
     transition: background-color 0.2s, transform 0.2s;
-    /* Smooth transition for hover effects */
     font-size: 16px;
-    /* Adjust the font size as needed */
     font-weight: medium;
     text-align: center;
-    /* Center the text inside the button */
     display: inline-block;
-    /* Allows setting padding and margins */
     margin: 5px;
-    /* Adds some space around the button */
     user-select: none;
-    /* Prevents the text in the button from being selectable */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-    /* Adds a shadow to give the button depth */
+    box-shadow: 0 1px 1px var(--buttext);
 }
 
 .chat-container button:hover {
-    background-color: #1a1a1a;
+    background-color: var(--buthover);
     /* Dark background color on hover */
     color: #ffffff;
     /* Light text color on hover */
-    border: 2px solid #000000;
+    border: 2px solid var(--buttext);
     /* Maintain black border on hover for consistency */
     transform: translateY(-2px);
     /* Gives a small lift to the button when hovered */
@@ -411,7 +459,7 @@ body {
     display: none;
     position: absolute;
     right: 0;
-    background-color: #f9f9f9;
+    background-color: var(--background1);
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     padding: 12px 16px;
@@ -422,15 +470,11 @@ body {
     display: block;
 }
 
-.background-color {
-    background-color: var(--background-white1);
-}
-
 /* 用户消息样式 */
 .user-message {
-    background-color:var(--white);
+    background-color: var(--userbg);
     /* 浅灰色背景 */
-    color: #333;
+    color: var(--usertext);
     /* 文本颜色 */
     text-align: left;
     /* 文本左对齐 */
@@ -454,9 +498,9 @@ body {
 
 /* AI消息样式 */
 .ai-message {
-    background-color: #0078D7;
+    background-color: var(--aibg);
     /* 蓝色背景 */
-    color: white;
+    color: var(--aitext);
     /* 白色文本 */
     text-align: left;
     /* 文本左对齐 */
@@ -479,39 +523,12 @@ body {
     line-height: 1.6;
 }
 
-#tender-select {
-    position: absolute;
-    /* 相对于最近的相对定位祖先元素定位 */
-    top: 10px;
-    /* 从chat-box顶部的距离 */
-    right: 10px;
-    /* 从chat-box右边的距离 */
-    z-index: 10;
-    /* 确保它在chat-box之上 */
-    /* Additional styling for the input */
-    padding: 5px 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-}
 
-.tabs {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-    border-bottom: 2px solid #ccc;
-}
-
-.tab {
-    flex-grow: 1;
-    /* Allows the tab to grow and fill the space */
+/* .tab { */
+    /* flex-grow: 1;
     text-align: center;
-    /* Centers the text inside the tab */
-    position: relative;
-    /* Context for the absolute positioning of the pseudo-element */
-    background: none;
+    position: relative; */
+    /* background: none;
     border: none;
     outline: none;
     cursor: pointer;
@@ -519,49 +536,5 @@ body {
     margin-bottom: -2px;
     font-size: 16px;
     transition: color 0.3s;
-    margin-left: 16px;
-}
-
-.tab:hover,
-.tab.active {
-    color: #555;
-}
-
-.tab.active {
-    font-weight: bold;
-}
-
-/* The red underline for the active tab */
-.tab.active:after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    /* Underline will span the full width of the tab */
-    height: 3px;
-    background-color: #e6e47c;
-}
-
-.tab-content {
-    display: none;
-    /* Other styles for your content area */
-}
-
-.tab-content.active {
-    display: block;
-    text-align: left;
-    margin: 8px;
-}
-.message-header-left {
-    font-size: 0.8em;
-    color: #888;
-    margin-bottom: 5px;
-    text-align: left;
-}
-.message-header-right {
-    font-size: 0.8em;
-    color: #888;
-    margin-bottom: 5px;
-    text-align: right;
-}
+    margin-left: 16px; */
+/* } */
